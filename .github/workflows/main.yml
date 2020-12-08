@@ -36,3 +36,4 @@ jobs:
       - name: Push to server
         run: |
           git remote add production ${{ secrets.PROD_REPO }}
+          git remote -v

@@ -48,5 +48,6 @@ jobs:
 
       - name: Push to server
         run: |
-          git remote add production ${{ secrets.PROD_REPO }}
+          ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
+          git remote add production ${{ secrets.PRODUCTION_REPOSITORY }}
           git push production main

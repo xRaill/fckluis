@@ -26,14 +26,14 @@ jobs:
 
       - name: Build next.js
         run: yarn build
-    
-      - run: pwd
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: snapshot
-          path: /home/runner/work/fckluis/fckluis/
-
+          name: build
+          path: |
+            ${{ github.workspace }}
+            !${{ github.workspace }}/.node_modules
   deploy:
     runs-on: ubuntu-latest
     needs: [ build ]

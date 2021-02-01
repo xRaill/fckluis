@@ -44,7 +44,7 @@ jobs:
       #  with:
       #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Download artifact
-      - uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v2
         with:
           name: snapshot
 

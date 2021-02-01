@@ -36,6 +36,6 @@ jobs:
       - name: Push to server
         run: |
           git clone ${{ secrets.PROD_REPO }} test
-          ls
+          ls 
           git remote add production ${{ secrets.PROD_REPO }}
           git remote -v

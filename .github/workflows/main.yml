@@ -26,6 +26,12 @@ jobs:
 
       - name: Build next.js
         run: yarn build
+    
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: snapshot
+          path: /*
 
   deploy:
     runs-on: ubuntu-latest
@@ -33,14 +39,20 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Connect to server
-        uses: webfactory/ssh-agent@v0.4.1
+      #- name: Connect to server
+      #  uses: webfactory/ssh-agent@v0.4.1
+      #  with:
+      #    ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Download artifact
+      - uses: actions/download-artifact@v2
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          name: snapshot
+
       - name: Push to server
         run: |
-          ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
-          ls
+          git remote add production ${{ secrets.PROD_REPO }}
+          git push production main
+        # ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
         # git clone ${{ secrets.PROD_REPO }} test
           # git remote add production ${{ secrets.PROD_REPO }}
           # git remote -v

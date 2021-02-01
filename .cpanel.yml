@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - yarn install
+    - yarn pm2 restart next >> /dev/null || yarn pm2 start yarn --name next -- production -p 23679

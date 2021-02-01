@@ -39,6 +39,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Push to server
         run: |
+          ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
           git clone ${{ secrets.PROD_REPO }} test
           ls 
           git remote add production ${{ secrets.PROD_REPO }}

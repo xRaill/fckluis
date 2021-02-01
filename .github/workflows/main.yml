@@ -50,5 +50,5 @@ jobs:
         run: |
           ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
           git remote add production ${{ secrets.PRODUCTION_REPOSITORY }}
-          git pull
+          git fetch production main:main
           git push production main

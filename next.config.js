@@ -1,8 +1,8 @@
 module.exports = {
-	rewrites: async () => [
-		{
-			source: '/index.php',
-			destination: '/'
-		}
-	]
+  rewrites: async () => [
+    {
+      source: '/index.php',
+      destination: '/',
+    },
+  ],
 };

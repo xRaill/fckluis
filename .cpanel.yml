@@ -1,6 +1,7 @@
 ---
 deployment:
   tasks:
+    - cp .htaccess ~/www/.htaccess
     - yarn install
     - yarn build
     - yarn pm2 restart next >> /dev/null || yarn pm2 start 'yarn start -p 23679' --name next

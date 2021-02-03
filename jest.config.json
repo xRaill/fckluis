@@ -1,0 +1,20 @@
+{
+  "setupFilesAfterEnv": ["./jest.setup.js"],
+  "moduleNameMapper": {
+    "^tests(.*)$": "<rootDir>/tests$1",
+    "^pages(.*)$": "<rootDir>/pages$1",
+    "^utils(.*)$": "<rootDir>/utils$1"
+  },
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "./pages/**",
+    "!./pages/_*",
+    "./components/**",
+    "./utils/**"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "lines": 100
+    }
+  }
+}

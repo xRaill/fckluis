@@ -5,7 +5,7 @@ import {
 } from 'styled-components';
 import type { AppProps } from 'next/app';
 
-const theme: DefaultTheme = {
+export const theme: DefaultTheme = {
   colors: {
     background: '#fff',
   },

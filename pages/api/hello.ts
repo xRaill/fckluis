@@ -1,4 +1,4 @@
-import ApiHandler from '../../utils/api';
+import ApiHandler from 'utils/api';
 
 const Hello = ApiHandler((req, res) => {
   res.statusCode = 200;

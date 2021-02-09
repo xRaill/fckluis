@@ -8,6 +8,7 @@ import type { AppProps } from 'next/app';
 export const theme: DefaultTheme = {
   colors: {
     background: '#fff',
+    purple: '#71265E',
   },
 };
 
@@ -26,7 +27,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   * {
-    box-sizing: border-border-box;
+    box-sizing: border-box;
   }
 `;
 

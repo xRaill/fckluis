@@ -3,6 +3,7 @@
   "moduleNameMapper": {
     "^tests(.*)$": "<rootDir>/tests$1",
     "^pages(.*)$": "<rootDir>/pages$1",
+    "^components(.*)$": "<rootDir>/components$1",
     "^utils(.*)$": "<rootDir>/utils$1"
   },
   "collectCoverage": true,

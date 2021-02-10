@@ -4,11 +4,11 @@ const Nav = styled.nav`
   display: flex;
   border-bottom: solid 1px black;
   background-color: lightgrey;
-  height: 5vh;
+  height: 3em;
 `;
 
 const NavItem = styled.a<{ right?: boolean }>`
-  line-height: 5vh;
+  line-height: 3em;
   padding: 0 1em;
   position: ${({ right }) => right && 'absolute'};
   right: ${({ right }) => right && 0};

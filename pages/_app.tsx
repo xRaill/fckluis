@@ -9,6 +9,7 @@ export const theme: DefaultTheme = {
   colors: {
     background: '#fff',
     purple: '#71265E',
+    lightpurple: '#A03585',
   },
 };
 

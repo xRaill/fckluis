@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { useState } from 'react';
+import Labels from './Labels';
 
 const SearchWrapper = styled.label`
   display: inline-flex;
@@ -9,6 +10,7 @@ const SearchWrapper = styled.label`
   border-radius: 5px;
   height: 2.5em;
   width: 40vw;
+  margin: 0 auto;
   @media (max-width: 767px) {
     width: 90vw;
   }
@@ -66,7 +68,7 @@ const Search: React.FC = () => {
   const [searching, setSearching] = useState(false);
 
   return (
-    <div>
+    <>
       <SearchWrapper htmlFor={'search'}>
         <SearchIcon icon={searching ? faSpinner : faSearch} pulse={searching} />
         <Input id={'search'} placeholder={'Projecten zoeken...'} />
@@ -77,7 +79,8 @@ const Search: React.FC = () => {
           </select>
         </Dropdown>
       </SearchWrapper>
-    </div>
+      <Labels content={['test', '123']} editable />
+    </>
   );
 };
 

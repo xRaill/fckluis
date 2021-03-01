@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 
 const Nav = styled.nav`
   display: flex;
@@ -20,9 +21,12 @@ const NavItem = styled.a<{ right?: boolean }>`
 const Navbar: React.FC = () => {
   return (
     <Nav>
-      <NavItem href={'https://fcdeveloper.nl'}>FC Developer</NavItem>
-      <NavItem right>Login</NavItem>
-      {/* Test */}
+      <Link href={'https://fcdeveloper.nl'} passHref>
+        <NavItem>FC Developer</NavItem>
+      </Link>
+      <Link href={'/login'} passHref>
+        <NavItem right>Login</NavItem>
+      </Link>
     </Nav>
   );
 };

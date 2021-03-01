@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Navbar from './Navbar';
@@ -23,7 +24,9 @@ const Layout: React.FC<Layout> = ({ children }) => {
   return (
     <Wrapper>
       <Navbar />
-      <Logo expanded={expanded}>FC Kluis</Logo>
+      <Logo expanded={expanded}>
+        <Link href={'/'}>FC Kluis</Link>
+      </Logo>
       {children}
     </Wrapper>
   );

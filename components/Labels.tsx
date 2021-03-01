@@ -9,8 +9,7 @@ import {
 import styled from 'styled-components';
 
 const LabelsContainer = styled.div`
-  max-width: 40vw;
-  margin: 0 auto;
+  margin: 5px auto;
 `;
 
 const LabelWrapper = styled.span`
@@ -48,7 +47,8 @@ const AddLabel = styled.span<{ active: boolean }>`
   display: inline-block;
   border: ${({ active }) => `1px ${active ? 'solid' : 'none'} gray`};
   border-radius: 5px;
-  padding: 0 5px;
+  /* padding: 0 5px; */
+  margin-left: 5px;
   font-size: 0.8em;
   color: gray;
   &:hover,
@@ -57,11 +57,13 @@ const AddLabel = styled.span<{ active: boolean }>`
   }
   & input {
     border: ${({ active }) => `1px ${active ? 'none' : 'dashed'} gray`};
-    margin: 0 2px;
+    /* margin: 0 2px; */
+    padding: 0 4px;
     width: 110px;
     outline: none;
     border-radius: 5px;
     background-color: transparent;
+    text-align: ${({ active }) => !active && 'center'};
   }
   & div {
     display: ${({ active }) => (active ? 'flex' : 'none')};
@@ -85,12 +87,17 @@ const AddLabel = styled.span<{ active: boolean }>`
 `;
 
 interface Labels {
-  content?: string[];
+  activeLabels?: string[];
+  allLabels?: string[];
   editable?: boolean;
 }
 
-const Labels: React.FC<Labels> = ({ editable, content = [] }) => {
-  const [labels, setLabels] = useState(content);
+const Labels: React.FC<Labels> = ({
+  editable,
+  activeLabels = [],
+  allLabels = [],
+}) => {
+  const [labels, setLabels] = useState(activeLabels);
   const [dropdown, setDropdown] = useState(false);
   const [index, setIndex] = useState(0);
   const [term, setTerm] = useState('');
@@ -99,6 +106,7 @@ const Labels: React.FC<Labels> = ({ editable, content = [] }) => {
     setLabels(labels.filter((v) => v !== name));
 
   const addLabel = (name: string) => {
+    if (!name) return;
     setLabels(labels.concat(name));
     setTerm('');
     setIndex(0);
@@ -126,18 +134,18 @@ const Labels: React.FC<Labels> = ({ editable, content = [] }) => {
     }
   };
 
-  const handleFocus: FocusEventHandler<HTMLDivElement> = (e) => {
+  const handleFocus: FocusEventHandler<HTMLDivElement> = () => {
     setDropdown(true);
     document.getElementById('label-search').focus();
   };
-
-  const allLabels = ['Label1', 'Label2', 'Label3', 'Label4'];
 
   return (
     <LabelsContainer>
       {labels.map((label, i) => (
         <LabelWrapper key={i}>
-          <LabelText single={!editable}>{label}</LabelText>
+          <LabelText single={!editable} data-testid={'label'}>
+            {label}
+          </LabelText>
           {editable && (
             <RemoveLabel onClick={() => removeLabel(label)}>
               <FontAwesomeIcon icon={faTimes} />
@@ -145,30 +153,35 @@ const Labels: React.FC<Labels> = ({ editable, content = [] }) => {
           )}
         </LabelWrapper>
       ))}
-      <AddLabel
-        active={dropdown}
-        onFocus={handleFocus}
-        onBlur={() => setDropdown(false)}
-        tabIndex={0}
-      >
-        <input
-          id={'label-search'}
-          placeholder={'Label toevoegen'}
-          value={term}
-          onChange={handleSearch}
-          onKeyDown={handleKeyPress}
-        />
-        <div>
-          {filteredLabels().map((name, i) => (
-            <span
-              key={i}
-              className={index === i && 'selected'}
-              onClick={() => addLabel(name)}
-              children={name}
-            />
-          ))}
-        </div>
-      </AddLabel>
+      {editable &&
+        <AddLabel
+          active={dropdown}
+          onFocus={handleFocus}
+          tabIndex={0}
+          onBlur={() => {
+            setDropdown(false);
+            setTerm('');
+          }}
+        >
+          <input
+            id={'label-search'}
+            placeholder={'Label toevoegen'}
+            value={term}
+            onChange={handleSearch}
+            onKeyDown={handleKeyPress}
+          />
+          <div>
+            {filteredLabels().map((name, i) => (
+              <span
+                key={i}
+                className={index === i ? 'selected' : ''}
+                onClick={() => addLabel(name)}
+                children={name}
+              />
+            ))}
+          </div>
+        </AddLabel>
+      }
     </LabelsContainer>
   );
 };

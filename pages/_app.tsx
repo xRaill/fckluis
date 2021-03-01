@@ -4,6 +4,7 @@ import {
   DefaultTheme,
 } from 'styled-components';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 
 export const theme: DefaultTheme = {
   colors: {
@@ -34,6 +35,9 @@ const GlobalStyles = createGlobalStyle`
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => (
   <ThemeProvider theme={theme}>
+    <Head>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
     <GlobalStyles />
     <Component {...pageProps} />
   </ThemeProvider>

@@ -1,5 +1,5 @@
 import { SequelizeStorage, Umzug } from 'umzug';
-import { sequelize } from './index';
+import { sequelize } from '../db/index';
 import { readdirSync, readFileSync } from 'fs';
 
 export const migrations = new Umzug({
@@ -23,15 +23,16 @@ export const migrations = new Umzug({
 
 export type Migrations = typeof migrations._types.migration;
 
+const seedsFileCount = () =>
+  readdirSync('db/seeds').length.toString().padStart(2, '0');
+
 export const seeds = new Umzug({
-  migrations: { glob: 'db/seeders/*.ts' },
+  migrations: { glob: 'db/seeds/*.ts' },
   create: {
-    folder: 'db/seeders',
+    folder: 'db/seeds',
     template: (filepath) => [
       [
-        `db/seeders/${readdirSync('db/seeders')
-          .length.toString()
-          .padStart(2, '0')}-${filepath.split('.').reverse()[0]}.ts`,
+        `db/seeds/${seedsFileCount}-${filepath.split('.').reverse()[0]}.ts`,
         readFileSync('db/templates/seed.ts', 'utf8').toString(),
       ],
     ],

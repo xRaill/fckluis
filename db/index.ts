@@ -16,10 +16,13 @@ export const sequelize = new Sequelize(
   }
 );
 
-// Load and initialize all models
-readdirSync('./db/models').forEach(async (file) => {
-  const model = await import(`./models/${file}`).then(
-    (module) => module[file.split('.')[0]]
+// // Load and initialize all models
+const models = [];
+readdirSync('./db/models').forEach(async (file, i, files) => {
+  models.push(
+    await import(`./models/${file}`).then(
+      (module) => module[file.split('.')[0]]
+    )
   );
-  sequelize.addModels([model]);
+  if (files.length - 1 === i) sequelize.addModels(models);
 });

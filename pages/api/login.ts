@@ -2,16 +2,18 @@ import { User } from 'db/models/User';
 import { ApiHandler, formError, formErrorCollection } from 'utils/api';
 import { serialize } from 'cookie';
 import { Session } from 'db/models/Session';
+import validator from 'validator';
 
 const Login = ApiHandler(async (req, res) => {
-  if (!['GET'].includes(req.method))
+  if (!['POST'].includes(req.method))
     formError('base', `Method ${req.method} not allowed`);
 
   type strObj = { [key: string]: string };
-  const { email, password, remember_me } = req.query as strObj;
+  const { email, password, remember_me } = JSON.parse(req.body) as strObj;
 
   const errors = new formErrorCollection();
   if (!email) errors.add('email', 'Email required');
+  if (email && !validator.isEmail(email)) errors.add('email', 'Invalid email');
   if (!password) errors.add('password', 'Password required');
   errors.resolve();
 

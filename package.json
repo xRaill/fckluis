@@ -28,6 +28,7 @@
     "next": "10.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-hooks-global-state": "^1.0.1",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.5.0",
     "sequelize-typescript": "^2.0.0",

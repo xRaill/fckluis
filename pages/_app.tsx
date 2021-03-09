@@ -5,6 +5,8 @@ import {
 } from 'styled-components';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import useSession from 'hooks/useSession';
+import Loading from './_loading';
 
 export const theme: DefaultTheme = {
   colors: {
@@ -33,14 +35,18 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => (
-  <ThemeProvider theme={theme}>
-    <Head>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-    <GlobalStyles />
-    <Component {...pageProps} />
-  </ThemeProvider>
-);
+const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
+  const [loggedIn] = useSession();
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Head>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <GlobalStyles />
+      {loggedIn === undefined ? <Loading /> : <Component {...pageProps} />}
+    </ThemeProvider>
+  );
+};
 
 export default MyApp;

@@ -7,6 +7,8 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import useSession from 'hooks/useSession';
 import Loading from './_loading';
+import { Provider } from 'react-redux';
+import store from 'utils/store';
 
 export const theme: DefaultTheme = {
   colors: {
@@ -39,13 +41,18 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   const [loggedIn] = useSession();
 
   return (
-    <ThemeProvider theme={theme}>
-      <Head>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      <GlobalStyles />
-      {loggedIn === undefined ? <Loading /> : <Component {...pageProps} />}
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Head>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+        </Head>
+        <GlobalStyles />
+        {loggedIn === undefined ? <Loading /> : <Component {...pageProps} />}
+      </ThemeProvider>
+    </Provider>
   );
 };
 

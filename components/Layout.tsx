@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import styled from 'styled-components';
-import Navbar from './Navbar';
+import Navbar from 'components/Navbar';
+import { Toasts } from './Toasts';
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,6 +29,7 @@ const Layout: React.FC<Layout> = ({ children }) => {
         <Link href={'/'}>FC Kluis</Link>
       </Logo>
       {children}
+      <Toasts />
     </Wrapper>
   );
 };

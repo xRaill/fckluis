@@ -38,22 +38,25 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
-  const [loggedIn] = useSession();
+  const { loggedIn } = useSession();
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Head>
-          <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
-          />
-        </Head>
-        <GlobalStyles />
-        {loggedIn === undefined ? <Loading /> : <Component {...pageProps} />}
-      </ThemeProvider>
-    </Provider>
+    <>
+      <Head>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <GlobalStyles />
+      {loggedIn === undefined ? <Loading /> : <Component {...pageProps} />}
+    </>
   );
 };
 
-export default MyApp;
+const AppWrapper: React.FC<AppProps> = (props) => (
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <MyApp {...props} />
+    </ThemeProvider>
+  </Provider>
+);
+
+export default AppWrapper;

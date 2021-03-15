@@ -1,24 +1,35 @@
 import { useEffect } from 'react';
-import { useGlobalState } from './useGlobalState';
+import { update } from 'reducers/sessionSlice';
+import { useAppDispatch, useAppSelector } from 'utils/store';
 
-type Session = () => [loggedIn: boolean | undefined, accessToken: string];
+type Session = () => {
+  loggedIn: boolean | undefined;
+  accessToken: string;
+  intialized: boolean;
+};
 
 const useSession: Session = () => {
-  const [loggedIn, setLoggedIn] = useGlobalState('loggedIn');
-  const [accessToken, setAccessToken] = useGlobalState('accessToken');
+  const { loggedIn, accessToken, initialized } = useAppSelector(
+    (state) => state.session
+  );
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (loggedIn === undefined)
       fetch('/api/auth')
         .then(async (res) => {
           const body = await res.json();
-          setLoggedIn(body.success);
-          setAccessToken(body.access_token);
+          dispatch(
+            update({
+              loggedIn: body.success,
+              accessToken: body.access_token,
+            })
+          );
         })
-        .catch(() => setLoggedIn(false));
+        .catch(() => update({ loggedIn: false }));
   }, []);
 
-  return [loggedIn, accessToken];
+  return { loggedIn, accessToken, initialized };
 };
 
 export default useSession;

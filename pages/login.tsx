@@ -2,10 +2,10 @@ import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Layout from 'components/Layout';
 import useForm from 'hooks/useForm';
-import { useGlobalState } from 'hooks/useGlobalState';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useToast from 'hooks/useToast';
+import useSession from 'hooks/useSession';
 
 const InputWrapper = styled.div`
   width: 40vw;
@@ -62,7 +62,7 @@ const Button = styled.button<{ loading?: boolean }>`
 `;
 
 const Home: React.FC = () => {
-  const [loggedIn] = useGlobalState('loggedIn');
+  const { loggedIn } = useSession();
   const [loading, errors, submit, formLogger] = useForm('/api/login');
   const { push } = useRouter();
   const toast = useToast();

@@ -1,5 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useGlobalState } from './useGlobalState';
+import { update } from 'reducers/sessionSlice';
+import { useAppDispatch } from 'utils/store';
+import useSession from './useSession';
 
 type Form = (
   path: string
@@ -11,11 +13,11 @@ type Form = (
 ];
 
 const useForm: Form = (path) => {
-  const [accessToken] = useGlobalState('accessToken');
-  const [_, setLoggedIn] = useGlobalState('loggedIn');
+  const { accessToken } = useSession();
   const [active, setActive] = useState(false);
   const [errors, setErrors] = useState({});
   const [data, setData] = useState({});
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (active) {
@@ -31,7 +33,7 @@ const useForm: Form = (path) => {
           .then(async (res) => {
             const data = await res.json();
             if (data.success) {
-              setLoggedIn(true);
+              dispatch(update({ loggedIn: true }));
             } else {
               const newErrors = {};
               Object.values(data.errors).forEach(

@@ -5,6 +5,7 @@ import useForm from 'hooks/useForm';
 import { useGlobalState } from 'hooks/useGlobalState';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import useToast from 'hooks/useToast';
 
 const InputWrapper = styled.div`
   width: 40vw;
@@ -39,7 +40,7 @@ const Input = styled.input`
   padding: 7px 10px;
 `;
 
-const Button = styled.button<{ loading: boolean }>`
+const Button = styled.button<{ loading?: boolean }>`
   border: none;
   background-color: ${({ theme }) => theme.colors.lightpurple};
   color: lightgray;
@@ -64,6 +65,7 @@ const Home: React.FC = () => {
   const [loggedIn] = useGlobalState('loggedIn');
   const [loading, errors, submit, formLogger] = useForm('/api/login');
   const { push } = useRouter();
+  const toast = useToast();
 
   if (loggedIn) push('/');
 

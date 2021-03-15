@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import toastReducer from 'reducers/toastSlice';
+import session from 'reducers/sessionSlice';
+import toast from 'reducers/toastSlice';
 
 const store = configureStore({
   reducer: {
-    toast: toastReducer,
+    toast,
+    session,
   },
 });
 
@@ -12,6 +14,8 @@ export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
 
-export type AppDispatch = typeof store.dispatch;
+type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = (): AppDispatch => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+type AppSelector = TypedUseSelectorHook<RootState>;
+export const useAppSelector: AppSelector = useSelector;

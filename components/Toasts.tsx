@@ -3,6 +3,7 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Toast as ToastType } from 'reducers/toastSlice';
 import styled, { keyframes } from 'styled-components';
 import { useAppSelector } from 'utils/store';
 
@@ -18,23 +19,33 @@ const Wrapper = styled.div`
 `;
 
 const showToast = keyframes`
-  0% { height: 0; }
-  10% { height: 50px; margin: 10px 0; transform: translateY(0); }
-  90% { height: 50px; margin: 10px 0; transform: translateY(0); }
-  100% { height: 50px; margin: 10px 0; transform: translateX(-400px); }
+  from { height: 0; margin: 0 }
+  to { height: 50px; margin: 10px 0; transform: translateY(0); }
 `;
 
-const Toast = styled.div<{ color: string }>`
+const hideToast = keyframes`
+  from { transform: translateY(0); }
+  to { transform: translateX(-400px); }
+`;
+
+const animationStates = {
+  entering: showToast,
+  entered: '',
+  exiting: hideToast,
+};
+
+const Toast = styled.div<{ color: string; state: ToastType['state'] }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 200px;
-  height: 0px;
+  height: 50px;
   background-color: ${({ color }) => color};
-  margin: 0;
+  margin: 10px 0;
   overflow: hidden;
-  transform: translateY(150px);
-  animation: ${showToast} 10s;
+  animation-name: ${({ state }) => animationStates[state]};
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
   & > svg {
     margin: 0 10px;
   }
@@ -61,7 +72,7 @@ export const Toasts: React.FC = () => {
   return (
     <Wrapper>
       {toasts.map((toast, i) => (
-        <Toast key={i} color={color[toast.type]}>
+        <Toast key={i} color={color[toast.type]} state={toast.state}>
           <FontAwesomeIcon size={'2x'} icon={icon[toast.type]} />
           <span>{toast.message}</span>
         </Toast>

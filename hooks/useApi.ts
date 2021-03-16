@@ -8,7 +8,7 @@ type Api = (
 ) => {
   active: boolean;
   callback: (fn: callback) => void;
-  submit: (data: Record<string, unknown>) => void;
+  submit: (data?: Record<string, unknown>) => void;
 };
 
 const useApi: Api = (path) => {

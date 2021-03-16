@@ -5,8 +5,6 @@ import {
 } from 'styled-components';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import useSession from 'hooks/useSession';
-import Loading from './_loading';
 import { Provider } from 'react-redux';
 import store from 'utils/store';
 
@@ -38,25 +36,20 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
-  const { loggedIn } = useSession();
-
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      <GlobalStyles />
-      {loggedIn === undefined ? <Loading /> : <Component {...pageProps} />}
-    </>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Head>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+        </Head>
+        <GlobalStyles />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </Provider>
   );
 };
 
-const AppWrapper: React.FC<AppProps> = (props) => (
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <MyApp {...props} />
-    </ThemeProvider>
-  </Provider>
-);
-
-export default AppWrapper;
+export default MyApp;

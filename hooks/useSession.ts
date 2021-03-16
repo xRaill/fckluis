@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'utils/store';
 type Session = () => {
   loggedIn: boolean | undefined;
   accessToken: string;
-  intialized: boolean;
+  initialized: boolean;
 };
 
 const useSession: Session = () => {
@@ -15,18 +15,19 @@ const useSession: Session = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (loggedIn === undefined)
+    if (!initialized)
       fetch('/api/auth')
         .then(async (res) => {
           const body = await res.json();
           dispatch(
             update({
+              initialized: true,
               loggedIn: body.success,
               accessToken: body.access_token,
             })
           );
         })
-        .catch(() => update({ loggedIn: false }));
+        .catch(() => dispatch(update({ initialized: true })));
   }, []);
 
   return { loggedIn, accessToken, initialized };

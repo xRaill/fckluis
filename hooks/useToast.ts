@@ -1,7 +1,7 @@
 import { add, entered, exiting, pop, Toast } from 'reducers/toastSlice';
 import { useAppDispatch } from 'utils/store';
 
-type useToast = () => (toast: Toast) => void;
+type useToast = () => (toast: Omit<Toast, 'state'>) => void;
 
 const useToast: useToast = () => {
   const dispatch = useAppDispatch();

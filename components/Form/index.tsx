@@ -4,7 +4,11 @@ import { addError, reset, stop } from 'reducers/formSlice';
 import { useAppDispatch, useAppSelector } from 'utils/store';
 import FormError from './FormError';
 
-const Form: React.FC = ({ children }) => {
+interface Form {
+  onSuccess?: (res: Record<string, unknown>) => void;
+}
+
+const Form: React.FC<Form> = ({ onSuccess, children }) => {
   const { active, data } = useAppSelector((state) => state.form);
   const { submit, callback } = useApi('login');
   const dispatch = useAppDispatch();
@@ -17,7 +21,7 @@ const Form: React.FC = ({ children }) => {
     const body = await res.json();
 
     if (body.success) {
-      alert('Success');
+      onSuccess && onSuccess(body);
     } else {
       body.errors.forEach((error) => {
         dispatch(addError(error));

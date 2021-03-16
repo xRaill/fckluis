@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from 'components/Navbar';
 import { Toasts } from './Toasts';
+import useSession from 'hooks/useSession';
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,8 +13,16 @@ const Wrapper = styled.div`
 `;
 
 const Logo = styled.h1<{ expanded?: boolean }>`
-  padding: ${({ expanded }) => expanded && '15vh 0'};
-  transition: padding 1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: ${({ expanded }) => (expanded ? '80vh' : '30vh')};
+  transition: height 1s;
+`;
+
+const Body = styled.div<{ transition?: boolean }>`
+  opacity: ${({ transition }) => (transition ? 1 : 0)};
+  transition: opacity 1s;
 `;
 
 interface Layout {
@@ -21,14 +30,20 @@ interface Layout {
 }
 
 const Layout: React.FC<Layout> = ({ children }) => {
-  const [expanded] = useState(true);
+  const { initialized } = useSession();
+  const [expanded, setExpanded] = useState(!initialized);
+
+  useEffect(() => {
+    if (initialized) setExpanded(false);
+  }, [initialized]);
+
   return (
     <Wrapper>
-      <Navbar />
+      <Navbar visible={!expanded} />
       <Logo expanded={expanded}>
         <Link href={'/'}>FC Kluis</Link>
       </Logo>
-      {children}
+      <Body transition={!expanded}>{!expanded && children}</Body>
       <Toasts />
     </Wrapper>
   );

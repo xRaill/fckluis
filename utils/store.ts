@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import session from 'reducers/sessionSlice';
 import toast from 'reducers/toastSlice';
+import form from 'reducers/formSlice';
 
 const store = configureStore({
   reducer: {
     toast,
     session,
+    form,
   },
 });
 

@@ -6,7 +6,7 @@ const Nav = styled.nav<{ visible: boolean }>`
   display: flex;
   border-bottom: solid 1px black;
   background-color: lightgrey;
-  height: 3em;
+  height: 6vh;
   transition: transform 1s;
   transform: translateY(${({ visible }) => (visible ? 0 : '-100%')});
 `;

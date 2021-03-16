@@ -22,8 +22,8 @@ const Background = styled.div<{ active: boolean }>`
 `;
 
 const Position = styled.div<{ x: number; y: number; center: boolean }>`
-  /* transition: all 0.5s cubic-bezier(0.47, 0.23, 0.34, 1.29); */
-  transition: all 0.5s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.47, 0.23, 0.34, 1.29);
+  /* transition: all 0.5s ease-in-out; */
   position: absolute;
   top: ${({ center, y }) => (center ? 0 : `${y}px`)};
   left: ${({ center, x }) => (center ? 0 : `${x}px`)};
@@ -73,7 +73,6 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
       <OriginalContent ref={content} visible={active} onClick={activate}>
         <Modal active={false} {...props} />
       </OriginalContent>
-      {/* {transState === 'entered' && <PreventScroll />} */}
       {transState !== 'exited' && (
         <Background active={transState === 'entered'} onClick={deactivate}>
           <Position x={pos.x} y={pos.y} center={transState === 'entered'}>
@@ -166,13 +165,6 @@ const ModalBody = styled.div<{ active: boolean }>`
   }
 `;
 
-const PreventScroll = createGlobalStyle<{ scrollWidth: number }>`
-  body {
-    padding-right: ${({ scrollWidth }) => `${scrollWidth}px`};
-    overflow-y: hidden;
-  }
-`;
-
 interface Modal extends Partial<ProjectDetails> {
   active: boolean;
   close?: VoidFunction;
@@ -187,69 +179,46 @@ const Modal: React.FC<Modal> = ({
   url,
   file,
   close,
-}) => {
-  const getScrollbarWidth = () => {
-    // Creating invisible container
-    const outer = document.createElement('div');
-    outer.style.visibility = 'hidden';
-    outer.style.overflow = 'scroll'; // forcing scrollbar to appear
-    document.body.appendChild(outer);
-
-    // Creating inner element and placing it in the container
-    const inner = document.createElement('div');
-    outer.appendChild(inner);
-
-    // Calculating difference between container's full width and the child width
-    const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
-
-    // Removing temporary elements from the DOM
-    outer.parentNode.removeChild(outer);
-
-    return scrollbarWidth;
-  };
-
-  return (
-    <ModalBody active={active} onClick={(e) => active && e.stopPropagation()}>
-      {active && scroll && <PreventScroll scrollWidth={getScrollbarWidth()} />}
-      <div className={'toolbar'}>
-        <FontAwesomeIcon icon={faTimes} size={'2x'} onClick={close} />
-        <FontAwesomeIcon icon={faEdit} size={'2x'} />
-      </div>
-      <img className={'thumbnail'} src={'/placeholder.jpg'} />
-      <div className={'hide-on-active'}>
+}) => (
+  <ModalBody active={active} onClick={(e) => active && e.stopPropagation()}>
+    <div className={'toolbar'}>
+      <FontAwesomeIcon icon={faTimes} size={'2x'} onClick={close} />
+      <FontAwesomeIcon icon={faEdit} size={'2x'} />
+    </div>
+    <img className={'thumbnail'} src={'/placeholder.jpg'} />
+    <div className={'hide-on-active'}>
+      <Labels activeLabels={labels} />
+    </div>
+    <div className={'hide-on-active'}>{title}</div>
+    <div className={'row'}>
+      <div className={'label'}>Titel</div>
+      <div className={'title'}>{title}</div>
+    </div>
+    <div className={'row'}>
+      <div className={'label'}>Beschrijving</div>
+      <div className={'description'}>{description}</div>
+    </div>
+    <div className={'row'}>
+      <div className={'label'}>Gemaakt door</div>
+      <div className={'author'}>{author}</div>
+    </div>
+    <div className={'row'}>
+      <div className={'label'}>Labels</div>
+      <div className={'labels'}>
         <Labels activeLabels={labels} />
       </div>
-      <div className={'hide-on-active'}>{title}</div>
-      <div className={'row'}>
-        <div className={'label'}>Titel</div>
-        <div className={'title'}>{title}</div>
+    </div>
+    <div className={'row'}>
+      <div className={'label'}>URL</div>
+      <div className={'url'}>
+        <a href={url}>{url}</a>
       </div>
+    </div>
+    {file && (
       <div className={'row'}>
-        <div className={'label'}>Beschrijving</div>
-        <div className={'description'}>{description}</div>
+        <div className={'label'}>Download</div>
+        <div className={'files'}>{file}</div>
       </div>
-      <div className={'row'}>
-        <div className={'label'}>Gemaakt door</div>
-        <div className={'author'}>{author}</div>
-      </div>
-      <div className={'row'}>
-        <div className={'label'}>Labels</div>
-        <div className={'labels'}>
-          <Labels activeLabels={labels} />
-        </div>
-      </div>
-      <div className={'row'}>
-        <div className={'label'}>URL</div>
-        <div className={'url'}>
-          <a href={url}>{url}</a>
-        </div>
-      </div>
-      {file && (
-        <div className={'row'}>
-          <div className={'label'}>Download</div>
-          <div className={'files'}>{file}</div>
-        </div>
-      )}
-    </ModalBody>
-  );
-};
+    )}
+  </ModalBody>
+);

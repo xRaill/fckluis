@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Navbar from 'components/Navbar';
 import { Toasts } from './Toasts';
 import useSession from 'hooks/useSession';
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,6 +27,10 @@ const Body = styled.div<{ transition?: boolean }>`
   transition: opacity 1s;
 `;
 
+const ScrollBar = styled(SimpleBar)`
+  max-height: 94vh;
+`;
+
 interface Layout {
   children: React.ReactNode;
 }
@@ -40,10 +46,12 @@ const Layout: React.FC<Layout> = ({ children }) => {
   return (
     <Wrapper>
       <Navbar visible={!expanded} />
-      <Logo expanded={expanded}>
-        <Link href={'/'}>FC Kluis</Link>
-      </Logo>
-      <Body transition={!expanded}>{!expanded && children}</Body>
+      <ScrollBar>
+        <Logo expanded={expanded}>
+          <Link href={'/'}>FC Kluis</Link>
+        </Logo>
+        <Body transition={!expanded}>{!expanded && children}</Body>
+      </ScrollBar>
       <Toasts />
     </Wrapper>
   );

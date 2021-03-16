@@ -29,6 +29,18 @@ const Home: React.FC = () => {
           url={'https://duckduckgo.nl'}
           file={'some-file-1.zip'}
         />
+        <Project
+          title={'TEST2'}
+          description={'test1234'}
+          url={'https://duckduckgo.nl'}
+          file={'some-file-1.zip'}
+        />
+        <Project
+          title={'TEST2'}
+          description={'test1234'}
+          url={'https://duckduckgo.nl'}
+          file={'some-file-1.zip'}
+        />
       </ProjectWrapper>
     </Layout>
   );

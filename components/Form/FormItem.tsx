@@ -2,8 +2,11 @@ import styled from 'styled-components';
 import FormError from './FormError';
 
 const InputItem = styled.div`
-  width: 40vw;
   margin: 15px auto;
+  width: 90vw;
+  @media (min-width: 767px) {
+    width: 40vw;
+  }
 `;
 
 const Label = styled.label`

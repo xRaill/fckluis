@@ -29,7 +29,7 @@ const Body = styled.div<{ transition?: boolean }>`
 `;
 
 const ScrollBar = styled(SimpleBar)`
-  max-height: 94vh;
+  height: 94vh;
 `;
 
 interface Layout {

@@ -6,6 +6,7 @@ import { Toasts } from './Toasts';
 import useSession from 'hooks/useSession';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import usePageTransition from 'hooks/usePageTransition';
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ const Logo = styled.h1<{ expanded?: boolean }>`
 
 const Body = styled.div<{ transition?: boolean }>`
   opacity: ${({ transition }) => (transition ? 1 : 0)};
-  transition: opacity 1s;
+  transition: opacity 0.5s;
 `;
 
 const ScrollBar = styled(SimpleBar)`
@@ -38,6 +39,7 @@ interface Layout {
 const Layout: React.FC<Layout> = ({ children }) => {
   const { initialized } = useSession();
   const [expanded, setExpanded] = useState(!initialized);
+  const { TransitionComponent, state } = usePageTransition(children);
 
   useEffect(() => {
     if (initialized) setExpanded(false);
@@ -50,7 +52,14 @@ const Layout: React.FC<Layout> = ({ children }) => {
         <Logo expanded={expanded}>
           <Link href={'/'}>FC Kluis</Link>
         </Logo>
-        <Body transition={!expanded}>{!expanded && children}</Body>
+        {state !== 2 && (
+          <Body transition={state === 0}>
+            {!expanded && TransitionComponent}
+          </Body>
+        )}
+        <Body transition={!expanded && state === 2}>
+          {!expanded && children}
+        </Body>
       </ScrollBar>
       <Toasts />
     </Wrapper>

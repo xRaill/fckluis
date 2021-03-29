@@ -13,6 +13,7 @@ const Input = styled.textarea`
   resize: vertical;
   min-height: 100px;
   padding: 7px 10px;
+  font-family: inherit;
 `;
 
 interface FormArea {
@@ -25,7 +26,7 @@ const FormArea: React.FC<FormArea> = ({ name, value, placeholder }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(updateData({ field: name, value: '' }));
+    dispatch(updateData({ field: name, value }));
   }, []);
 
   return (

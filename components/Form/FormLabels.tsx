@@ -13,7 +13,7 @@ const FormLabels: React.FC<FormLabels> = ({ name, activeLabels = [] }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(updateData({ field: name, value: [] }));
+    dispatch(updateData({ field: name, value: activeLabels }));
   }, []);
 
   const handleChange = (labels: string[]) => {

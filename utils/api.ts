@@ -1,3 +1,4 @@
+import { verify } from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { ValidationError } from 'sequelize/types';
 
@@ -50,3 +51,14 @@ export class formErrorCollection {
     if (errors.length) throw { success: false, errors };
   }
 }
+
+type validateAccessToken = (accessToken: string) => any;
+
+export const validateAccessToken: validateAccessToken = (accessToken) => {
+  if (!accessToken) return false;
+  try {
+    return verify(accessToken, process.env.ACCESS_SECRET);
+  } catch {
+    return false;
+  }
+};

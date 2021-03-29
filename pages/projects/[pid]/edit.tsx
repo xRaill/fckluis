@@ -14,8 +14,10 @@ import Loading from 'components/Loading';
 import { Project } from 'db/models/Project';
 
 const EditProject: React.FC = () => {
-  const { query } = useRouter();
-  const { callback, submit, } = useApi(`projects/${query.pid}`, 'GET');
+  const {
+    query: { pid },
+  } = useRouter();
+  const { callback, submit } = useApi(`projects/${pid}`, 'GET');
   const [project, setProject] = useState<Partial<Project>>({});
   const { authenticate } = useSession();
   const { push } = useRouter();
@@ -32,13 +34,13 @@ const EditProject: React.FC = () => {
 
   const handleSuccess = () => {
     push('/');
-    toast({ type: 'success', message: 'Project created!' });
+    toast({ type: 'success', message: 'Project updated!' });
   };
 
   return (
     <Layout>
       <Loading active={!!Object.values(project).length}>
-        <Form path={'projects/create'} onSuccess={handleSuccess}>
+        <Form path={`projects/${pid}/update`} onSuccess={handleSuccess}>
           <FormField name={'title'} value={project.title} />
           <FormArea name={'description'} value={project.description} />
           <FormField name={'author'} value={project.author} />

@@ -24,7 +24,7 @@ const FormField: React.FC<FormInput> = ({ name, type, value, placeholder }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(updateData({ field: name, value: '' }));
+    dispatch(updateData({ field: name, value }));
   }, []);
 
   return (

@@ -73,6 +73,7 @@ const AddLabel = styled.span<{ active: boolean }>`
     position: absolute;
     background-color: #fff;
     border: 1px solid gray;
+    z-index: 1;
     & span {
       display: block;
       width: 110px;
@@ -123,7 +124,7 @@ const Labels: React.FC<Labels> = ({
 
   const addLabel = (name: string) => {
     if (!name) return;
-    setLabels(labels.concat(name));
+    if (!labels.includes(name)) setLabels(labels.concat(name));
     setTerm('');
     setIndex(0);
   };
@@ -139,7 +140,7 @@ const Labels: React.FC<Labels> = ({
   const handleKeyPress: KeyboardEventHandler<HTMLInputElement> = (e) => {
     switch (e.key) {
       case 'Enter':
-        addLabel(addable ? term : filteredLabels()[index]);
+        addLabel(addable && term ? term : filteredLabels()[index]);
         break;
       case 'ArrowDown':
         index < filteredLabels().length - 1 && setIndex(index + 1);
@@ -180,6 +181,7 @@ const Labels: React.FC<Labels> = ({
           tabIndex={0}
           onBlur={() => {
             setDropdown(false);
+            if (addable) addLabel(term);
             setTerm('');
           }}
         >

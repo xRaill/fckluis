@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { update } from 'reducers/sessionSlice';
 import { useAppDispatch, useAppSelector } from 'utils/store';
@@ -6,6 +7,7 @@ type Session = () => {
   loggedIn: boolean | undefined;
   accessToken: string;
   initialized: boolean;
+  authenticate: (fn?: (loggedIn?: boolean) => void) => void;
 };
 
 const useSession: Session = () => {
@@ -13,6 +15,7 @@ const useSession: Session = () => {
     (state) => state.session
   );
   const dispatch = useAppDispatch();
+  const { push } = useRouter();
 
   useEffect(() => {
     if (!initialized)
@@ -30,7 +33,16 @@ const useSession: Session = () => {
         .catch(() => dispatch(update({ initialized: true })));
   }, []);
 
-  return { loggedIn, accessToken, initialized };
+  const authenticate = (fn?: (loggedIn?: boolean) => void) => {
+    useEffect(() => {
+      if (initialized) {
+        if (!loggedIn) push('/');
+        fn && fn(loggedIn);
+      }
+    }, [initialized]);
+  };
+
+  return { loggedIn, accessToken, initialized, authenticate };
 };
 
 export default useSession;

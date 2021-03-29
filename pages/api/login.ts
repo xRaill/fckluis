@@ -8,8 +8,9 @@ const Login = ApiHandler(async (req, res) => {
   if (!['POST'].includes(req.method))
     formError('base', `Method ${req.method} not allowed`);
 
-  type strObj = { [key: string]: string };
-  const { email, password, remember_me } = JSON.parse(req.body) as strObj;
+  const { email, password, remember_me } = <Record<string, string>>(
+    JSON.parse(req.body)
+  );
 
   const errors = new formErrorCollection();
   if (!email) errors.add('email', 'Email required');

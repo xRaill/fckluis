@@ -1,7 +1,9 @@
 import { faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useSession from 'hooks/useSession';
+import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import Labels from './Labels';
 
 const OriginalContent = styled.div<{ visible: boolean }>`
@@ -40,6 +42,8 @@ type transStates = 'entering' | 'entered' | 'exiting' | 'exited';
 const Project: React.FC<Partial<ProjectDetails>> = (props) => {
   const [transState, setTransState] = useState<transStates>('exited');
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const { loggedIn } = useSession();
+  const { push } = useRouter();
 
   const content = useRef<HTMLDivElement>();
 
@@ -66,12 +70,19 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
     }, TIMEOUT);
   };
 
+  const edit = () => {
+    deactivate();
+    setTimeout(() => {
+      push(`/projects/${props.id}/edit`);
+    }, TIMEOUT);
+  };
+
   const active = ['entered', 'exiting'].includes(transState);
 
   return (
     <div>
       <OriginalContent ref={content} visible={active} onClick={activate}>
-        <Modal active={false} {...props} />
+        <Modal active={false} loggedIn={loggedIn} {...props} />
       </OriginalContent>
       {transState !== 'exited' && (
         <Background active={transState === 'entered'} onClick={deactivate}>
@@ -79,6 +90,8 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
             <Modal
               active={transState === 'entered'}
               close={deactivate}
+              edit={edit}
+              loggedIn={loggedIn}
               {...props}
             />
           </Position>
@@ -91,6 +104,7 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
 export default Project;
 
 interface ProjectDetails {
+  id: number;
   title: string;
   description: string;
   author: string;
@@ -107,7 +121,8 @@ const ModalBody = styled.div<{ active: boolean }>`
   border-radius: ${({ active }) => (active ? '25px' : '5px')};
   background-color: white;
   transition: all 0.5s;
-  margin-bottom: ${({ active }) => active && '80px'};
+  /* margin-bottom: ${({ active }) => active && '80px'}; */
+  margin-bottom: 60px;
   width: ${({ active }) => (active ? '50vw' : '28vw')};
   @media (max-width: 767px) {
     width: 100vw;
@@ -167,7 +182,9 @@ const ModalBody = styled.div<{ active: boolean }>`
 
 interface Modal extends Partial<ProjectDetails> {
   active: boolean;
+  loggedIn: boolean;
   close?: VoidFunction;
+  edit?: VoidFunction;
 }
 
 const Modal: React.FC<Modal> = ({
@@ -178,12 +195,14 @@ const Modal: React.FC<Modal> = ({
   labels,
   url,
   file,
+  loggedIn,
   close,
+  edit,
 }) => (
   <ModalBody active={active} onClick={(e) => active && e.stopPropagation()}>
     <div className={'toolbar'}>
       <FontAwesomeIcon icon={faTimes} size={'2x'} onClick={close} />
-      <FontAwesomeIcon icon={faEdit} size={'2x'} />
+      {loggedIn && <FontAwesomeIcon icon={faEdit} size={'2x'} onClick={edit} />}
     </div>
     <img className={'thumbnail'} src={'/placeholder.jpg'} />
     <div className={'hide-on-active'}>

@@ -4,14 +4,15 @@ import useSession from './useSession';
 type callback = (fn: Response) => void;
 
 type Api = (
-  path: string
+  path: string,
+  method?: 'POST' | 'GET'
 ) => {
   active: boolean;
   callback: (fn: callback) => void;
   submit: (data?: Record<string, unknown>) => void;
 };
 
-const useApi: Api = (path) => {
+const useApi: Api = (path, method) => {
   const { accessToken } = useSession();
   const [active, setActive] = useState(false);
   const [callback, setCallback] = useState<callback>();
@@ -20,11 +21,9 @@ const useApi: Api = (path) => {
     setActive(true);
     setTimeout(() => {
       fetch(`/api/${path}`, {
-        method: 'POST',
-        body: JSON.stringify({
-          access_token: accessToken,
-          ...data,
-        }),
+        method: method || 'POST',
+        headers: accessToken ? { 'x-access-token': accessToken } : {},
+        body: JSON.stringify(data),
       })
         .finally(() => setActive(false))
         .then(callback);

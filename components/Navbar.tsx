@@ -34,9 +34,14 @@ const Navbar: React.FC<Navbar> = ({ visible }) => {
         <NavItem>FC Developer</NavItem>
       </Link>
       {loggedIn ? (
-        <Link href={'/logout'} passHref>
-          <NavItem right>Logout</NavItem>
-        </Link>
+        <>
+          <Link href={'/projects/new'} passHref>
+            <NavItem right>New project</NavItem>
+          </Link>
+          <Link href={'/logout'} passHref>
+            <NavItem right>Logout</NavItem>
+          </Link>
+        </>
       ) : (
         <Link href={'/login'} passHref>
           <NavItem right>Login</NavItem>

@@ -2,25 +2,26 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import FormItem from './FormItem';
 import { useAppDispatch } from 'utils/store';
-import { start, updateData } from 'reducers/formSlice';
+import { updateData } from 'reducers/formSlice';
 
-const Input = styled.input`
+const Input = styled.textarea`
   outline: none;
   border: ${({ theme }) => `1px solid ${theme.colors.purple}`};
   border-radius: 10px;
   font-size: 1em;
   width: 100%;
+  resize: vertical;
+  min-height: 100px;
   padding: 7px 10px;
 `;
 
-interface FormInput {
+interface FormArea {
   name: string;
-  type?: string;
   value?: string;
   placeholder?: string;
 }
 
-const FormField: React.FC<FormInput> = ({ name, type, value, placeholder }) => {
+const FormArea: React.FC<FormArea> = ({ name, value, placeholder }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -32,16 +33,14 @@ const FormField: React.FC<FormInput> = ({ name, type, value, placeholder }) => {
       <Input
         id={name}
         name={name}
-        type={type}
         defaultValue={value}
         placeholder={placeholder}
         onChange={(e) =>
           dispatch(updateData({ field: name, value: e.currentTarget.value }))
         }
-        onKeyPress={(e) => e.key == 'Enter' && dispatch(start())}
       />
     </FormItem>
   );
 };
 
-export default FormField;
+export default FormArea;

@@ -1,9 +1,11 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useApi from 'hooks/useApi';
 import {
   ChangeEventHandler,
   FocusEventHandler,
   KeyboardEventHandler,
+  useEffect,
   useState,
 } from 'react';
 import styled from 'styled-components';
@@ -90,17 +92,31 @@ interface Labels {
   activeLabels?: string[];
   allLabels?: string[];
   editable?: boolean;
+  addable?: boolean;
+  onChange?: (labels: string[]) => void;
 }
 
 const Labels: React.FC<Labels> = ({
+  addable,
   editable,
   activeLabels = [],
-  allLabels = [],
+  onChange,
 }) => {
+  const { callback, submit } = useApi('labels', 'GET');
+  const [allLabels, setAllLabels] = useState([]);
   const [labels, setLabels] = useState(activeLabels);
   const [dropdown, setDropdown] = useState(false);
   const [index, setIndex] = useState(0);
   const [term, setTerm] = useState('');
+
+  callback(async (res) => {
+    const body = await res.json();
+    setAllLabels(body.labels);
+  });
+
+  useEffect(() => {
+    if (editable) submit();
+  }, []);
 
   const removeLabel = (name: string) =>
     setLabels(labels.filter((v) => v !== name));
@@ -123,7 +139,7 @@ const Labels: React.FC<Labels> = ({
   const handleKeyPress: KeyboardEventHandler<HTMLInputElement> = (e) => {
     switch (e.key) {
       case 'Enter':
-        addLabel(filteredLabels()[index]);
+        addLabel(addable ? term : filteredLabels()[index]);
         break;
       case 'ArrowDown':
         index < filteredLabels().length - 1 && setIndex(index + 1);
@@ -139,6 +155,10 @@ const Labels: React.FC<Labels> = ({
     document.getElementById('label-search').focus();
   };
 
+  useEffect(() => {
+    onChange && onChange(labels);
+  }, [labels]);
+
   return (
     <LabelsContainer>
       {labels.map((label, i) => (
@@ -153,7 +173,7 @@ const Labels: React.FC<Labels> = ({
           )}
         </LabelWrapper>
       ))}
-      {editable &&
+      {editable && (
         <AddLabel
           active={dropdown}
           onFocus={handleFocus}
@@ -181,7 +201,7 @@ const Labels: React.FC<Labels> = ({
             ))}
           </div>
         </AddLabel>
-      }
+      )}
     </LabelsContainer>
   );
 };

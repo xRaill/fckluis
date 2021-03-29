@@ -7,7 +7,9 @@ const Auth = ApiHandler(async (req, res) => {
 
   const labels = await Label.findAll({ attributes: ['name'] });
 
-  return res.json({ success: true, labels });
+  const labelsArray = labels.map((label) => (label.toJSON() as Label).name);
+
+  return res.json({ success: true, labels: labelsArray });
 });
 
 export default Auth;

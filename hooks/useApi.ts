@@ -17,17 +17,22 @@ const useApi: Api = (path, method) => {
   const [active, setActive] = useState(false);
   const [callback, setCallback] = useState<callback>();
 
+  const createUrlParams = (data) => {
+    if (method !== 'GET') return '';
+    return '?' + new URLSearchParams(data).toString();
+  };
+
   const submit = (data) => {
     setActive(true);
     setTimeout(() => {
-      fetch(`/api/${path}`, {
+      fetch(`/api/${path}${createUrlParams(data)}`, {
         method: method || 'POST',
         headers: accessToken ? { 'x-access-token': accessToken } : {},
-        body: JSON.stringify(data),
+        body: method !== 'GET' ? JSON.stringify(data) : undefined,
       })
         .finally(() => setActive(false))
         .then(callback);
-    }, 1000);
+    }, 500);
   };
 
   const cb = (fn: callback) =>

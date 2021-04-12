@@ -1,7 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import { useState } from 'react';
+import {
+  ChangeEventHandler,
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import Labels from './Labels';
 
 const SearchWrapper = styled.label`
@@ -64,18 +69,56 @@ const Dropdown = styled.label`
   }
 `;
 
-const Search: React.FC = () => {
+let delayTimer;
+
+interface Search {
+  active: boolean;
+  setSearch: (val: string[]) => void;
+}
+
+const Search: React.FC<Search> = ({ active, setSearch }) => {
   const [searching, setSearching] = useState(false);
+  const [term, setTerm] = useState('');
+  const [order, setOrder] = useState('desc');
+
+  const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.currentTarget.value;
+    setTerm(value);
+    setSearching(true);
+    clearTimeout(delayTimer);
+    delayTimer = setTimeout(() => {
+      setSearch([value, order]);
+      setSearching(false);
+    }, 1000);
+  };
+
+  const handleSelectChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    clearTimeout(delayTimer);
+    setSearching(false);
+    setOrder(e.currentTarget.value);
+    setSearch([term, e.currentTarget.value]);
+  };
 
   return (
     <>
       <SearchWrapper htmlFor={'search'}>
-        <SearchIcon icon={searching ? faSpinner : faSearch} pulse={searching} />
-        <Input id={'search'} placeholder={'Projecten zoeken...'} />
+        <SearchIcon
+          icon={searching || active ? faSpinner : faSearch}
+          pulse={searching || active}
+        />
+        <Input
+          id={'search'}
+          placeholder={'Projecten zoeken...'}
+          onChange={handleInputChange}
+        />
         <Dropdown htmlFor={'dropdown'}>
-          <select id={'dropdown'}>
-            <option>Nieuwste</option>
-            <option>Oudste</option>
+          <select
+            id={'dropdown'}
+            defaultValue={order}
+            onChange={handleSelectChange}
+          >
+            <option value={'desc'}>Nieuwste</option>
+            <option value={'asc'}>Oudste</option>
           </select>
         </Dropdown>
       </SearchWrapper>

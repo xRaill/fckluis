@@ -1,6 +1,7 @@
 import { ApiHandler, formError, validateAccessToken } from 'utils/api';
 import { Project } from 'db/models/Project';
 import { Label } from 'db/models/Label';
+import { Op } from 'sequelize';
 
 const Projects = ApiHandler(async (req, res) => {
   if (!['GET'].includes(req.method))
@@ -10,8 +11,28 @@ const Projects = ApiHandler(async (req, res) => {
 
   const loggedIn = validateAccessToken(accessToken);
 
+  const { search, order } = <Record<string, string>>req.query;
+
+  if (order && !['desc', 'asc'].includes(order))
+    formError('order', `Invalid order`);
+
+  const searchquery = search
+    ? {
+        [Op.or]: {
+          title: { [Op.like]: `%${search}%` },
+          description: { [Op.like]: `%${search}%` },
+        },
+      }
+    : {};
+
+  const publicquery = loggedIn ? {} : { public: true };
+
   const dbProjects = await Project.findAll({
-    where: loggedIn ? {} : { public: true },
+    where: {
+      ...searchquery,
+      ...publicquery,
+    },
+    order: [['createdAt', order || 'desc']],
     include: { model: Label },
   });
 

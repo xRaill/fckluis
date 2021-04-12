@@ -7,6 +7,10 @@ declare module 'styled-components' {
       background: string;
       purple: string;
       lightpurple: string;
+      red: string;
+      lightred: string;
+      green: string;
+      lightgreen: string;
     };
   }
 }

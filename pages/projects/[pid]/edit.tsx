@@ -12,29 +12,54 @@ import FormCheckbox from 'components/Form/FormCheckbox';
 import useApi from 'hooks/useApi';
 import Loading from 'components/Loading';
 import { Project } from 'db/models/Project';
+import FormItem from 'components/Form/FormItem';
 
 const EditProject: React.FC = () => {
   const {
     query: { pid },
   } = useRouter();
-  const { callback, submit } = useApi(`projects/${pid}`, 'GET');
+  const { callback: getCallback, submit: getSubmit } = useApi(
+    `projects/${pid}`,
+    'GET'
+  );
+  const { callback: delCallback, submit: delSubmit } = useApi(
+    `projects/${pid}/destroy`,
+    'DELETE'
+  );
   const [project, setProject] = useState<Partial<Project>>({});
   const { authenticate } = useSession();
   const { push } = useRouter();
   const toast = useToast();
 
   authenticate(() => {
-    submit();
+    getSubmit();
   });
 
-  callback(async (data) => {
+  getCallback(async (data) => {
     const body = await data.json();
-    setProject(body.project);
+    if (body.success) {
+      setProject(body.project);
+    } else {
+      push('/');
+      toast({ type: 'danger', message: body.errors[0].message });
+    }
+  });
+
+  delCallback(async (data) => {
+    const body = await data.json();
+    if (body.success) {
+      push('/');
+      toast({ type: 'success', message: 'Project removed!' });
+    }
   });
 
   const handleSuccess = () => {
     push('/');
     toast({ type: 'success', message: 'Project updated!' });
+  };
+
+  const confirmDeletion = () => {
+    if (confirm('Are you sure you want to delete this project?')) delSubmit();
   };
 
   return (
@@ -49,7 +74,12 @@ const EditProject: React.FC = () => {
             activeLabels={(project.labels as unknown) as string[]}
           />
           <FormCheckbox name={'public'} checked={project.public} />
-          <FormButton>Update</FormButton>
+          <FormItem inline>
+            <FormButton color={'red'} onClick={confirmDeletion}>
+              Remove
+            </FormButton>
+            <FormButton>Update</FormButton>
+          </FormItem>
         </Form>
       </Loading>
     </Layout>

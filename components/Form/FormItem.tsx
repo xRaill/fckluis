@@ -10,6 +10,9 @@ const InputItem = styled.div<{ inline?: boolean }>`
   @media (min-width: 767px) {
     width: 40vw;
   }
+  /* & button {
+    margin: 0 auto;
+  } */
 `;
 
 const Label = styled.label<{ inline?: boolean }>`
@@ -21,17 +24,19 @@ const Label = styled.label<{ inline?: boolean }>`
 `;
 
 interface FormItem {
-  name: string;
+  name?: string;
   inline?: boolean;
 }
 
 const FormItem: React.FC<FormItem> = ({ name, inline, children }) => (
   <InputItem inline={inline}>
-    <Label htmlFor={name} inline={inline}>
-      {name[0].toUpperCase() + name.slice(1)}
-    </Label>
+    {name && (
+      <Label htmlFor={name} inline={inline}>
+        {name[0].toUpperCase() + name.slice(1)}
+      </Label>
+    )}
     {children}
-    <FormError field={name} />
+    {name && <FormError field={name} />}
   </InputItem>
 );
 

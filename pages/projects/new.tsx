@@ -9,6 +9,7 @@ import FormArea from 'components/Form/FormArea';
 import FormLabels from 'components/Form/FormLabels';
 import FormCheckbox from 'components/Form/FormCheckbox';
 import Loading from 'components/Loading';
+import FormItem from 'components/Form/FormItem';
 
 const NewProject: React.FC = () => {
   const { loggedIn, authenticate } = useSession();
@@ -31,7 +32,9 @@ const NewProject: React.FC = () => {
           <FormField name={'author'} />
           <FormLabels name={'labels'} />
           <FormCheckbox name={'public'} />
-          <FormButton>Create</FormButton>
+          <FormItem inline>
+            <FormButton>Create</FormButton>
+          </FormItem>
         </Form>
       </Loading>
     </Layout>

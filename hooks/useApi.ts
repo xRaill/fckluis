@@ -5,7 +5,7 @@ type callback = (fn: Response) => void;
 
 type Api = (
   path: string,
-  method?: 'POST' | 'GET'
+  method?: 'POST' | 'GET' | 'DELETE'
 ) => {
   active: boolean;
   callback: (fn: callback) => void;

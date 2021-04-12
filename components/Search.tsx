@@ -79,7 +79,7 @@ const Search: React.FC = () => {
           </select>
         </Dropdown>
       </SearchWrapper>
-      <Labels content={['test', '123']} editable />
+      <Labels allLabels={['test', '123']} editable />
     </>
   );
 };

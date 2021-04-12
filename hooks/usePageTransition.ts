@@ -20,9 +20,7 @@ const usePageTransition: usePage = (children) => {
   useEffect(() => {
     if (typeof page.component === 'undefined') {
       page.setComponent(children);
-    } else {
-      setState(1);
-
+    } else if (state === 0) {
       setState(1);
       setTimeout(() => {
         setState(2);

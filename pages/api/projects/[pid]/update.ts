@@ -59,7 +59,7 @@ const UpdateProject = ApiHandler(async (req, res) => {
     if (!label) label = await Label.create({ name });
     await ProjectLabel.create({
       projectId: project.get('id'),
-      labelId: label.id,
+      labelId: label.id || label.get('id'),
     });
   });
 

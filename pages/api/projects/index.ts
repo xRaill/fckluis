@@ -1,7 +1,7 @@
 import { ApiHandler, formError, validateAccessToken } from 'utils/api';
 import { Project } from 'db/models/Project';
 import { Label } from 'db/models/Label';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 
 const Projects = ApiHandler(async (req, res) => {
   if (!['GET'].includes(req.method))
@@ -11,10 +11,12 @@ const Projects = ApiHandler(async (req, res) => {
 
   const loggedIn = validateAccessToken(accessToken);
 
-  const { search, order } = <Record<string, string>>req.query;
+  const { search, order, labels } = <Record<string, string>>req.query;
 
+  if (labels && labels.match(/([^\p{L},])/gu))
+    formError('labels', 'Contains illegal character');
   if (order && !['desc', 'asc'].includes(order))
-    formError('order', `Invalid order`);
+    formError('order', 'Invalid order');
 
   const searchquery = search
     ? {
@@ -27,13 +29,29 @@ const Projects = ApiHandler(async (req, res) => {
 
   const publicquery = loggedIn ? {} : { public: true };
 
+  const labelsquery = labels
+    ? {
+        id: {
+          [Op.in]: Sequelize.literal(`(
+            SELECT DISTINCT pl.project_id
+            FROM labels as l
+            INNER JOIN project_labels pl ON l.id = pl.label_id
+            WHERE l.name IN ('${labels.replaceAll(',', "', '")}')
+            GROUP BY pl.project_id
+            HAVING COUNT(l.id) == ${labels.split(',').length}
+        )`),
+        },
+      }
+    : {};
+
   const dbProjects = await Project.findAll({
     where: {
+      ...labelsquery,
       ...searchquery,
       ...publicquery,
     },
     order: [['createdAt', order || 'desc']],
-    include: { model: Label },
+    include: [Label],
   });
 
   const projects = dbProjects

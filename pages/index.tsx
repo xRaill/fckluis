@@ -4,7 +4,7 @@ import Project from 'components/Project';
 import Search from 'components/Search';
 import useApi from 'hooks/useApi';
 import useSession from 'hooks/useSession';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const ProjectWrapper = styled.div`
@@ -18,7 +18,7 @@ const Home: React.FC = () => {
   const { submit, callback, active } = useApi('projects', 'GET');
   const { initialized } = useSession();
   const [projects, setProjects] = useState([]);
-  const [search, setSearch] = useState(['', 'desc']);
+  const [search, setSearch] = useState<Array<string | string[]>>();
 
   callback(async (data) => {
     const body = await data.json();
@@ -28,9 +28,9 @@ const Home: React.FC = () => {
   });
 
   useEffect(() => {
-    if (initialized) {
+    if (initialized && search) {
       setProjects([]);
-      submit({ search: search[0], order: search[1] });
+      submit({ search: search[0], order: search[1], labels: search[2] });
     }
   }, [initialized, search]);
 

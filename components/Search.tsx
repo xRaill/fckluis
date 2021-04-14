@@ -1,12 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import {
-  ChangeEventHandler,
-  forwardRef,
-  useImperativeHandle,
-  useState,
-} from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import Labels from './Labels';
 
 const SearchWrapper = styled.label`
@@ -73,13 +68,14 @@ let delayTimer;
 
 interface Search {
   active: boolean;
-  setSearch: (val: string[]) => void;
+  setSearch: (val: Array<string | string[]>) => void;
 }
 
 const Search: React.FC<Search> = ({ active, setSearch }) => {
   const [searching, setSearching] = useState(false);
   const [term, setTerm] = useState('');
   const [order, setOrder] = useState('desc');
+  const [labels, setLabels] = useState<string[]>();
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = e.currentTarget.value;
@@ -87,7 +83,7 @@ const Search: React.FC<Search> = ({ active, setSearch }) => {
     setSearching(true);
     clearTimeout(delayTimer);
     delayTimer = setTimeout(() => {
-      setSearch([value, order]);
+      setSearch([value, order, labels]);
       setSearching(false);
     }, 1000);
   };
@@ -96,7 +92,14 @@ const Search: React.FC<Search> = ({ active, setSearch }) => {
     clearTimeout(delayTimer);
     setSearching(false);
     setOrder(e.currentTarget.value);
-    setSearch([term, e.currentTarget.value]);
+    setSearch([term, e.currentTarget.value, labels]);
+  };
+
+  const handleLabelsChange = (labels: string[]) => {
+    clearTimeout(delayTimer);
+    setSearching(false);
+    setLabels(labels);
+    setSearch([term, order, labels]);
   };
 
   return (
@@ -122,7 +125,7 @@ const Search: React.FC<Search> = ({ active, setSearch }) => {
           </select>
         </Dropdown>
       </SearchWrapper>
-      <Labels allLabels={['test', '123']} editable />
+      <Labels onChange={handleLabelsChange} editable />
     </>
   );
 };

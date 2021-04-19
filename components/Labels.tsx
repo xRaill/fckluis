@@ -162,7 +162,7 @@ const Labels: React.FC<Labels> = ({
 
   return (
     <LabelsContainer>
-      {labels.map((label, i) => (
+      {(editable ? labels : activeLabels).map((label, i) => (
         <LabelWrapper key={i}>
           <LabelText single={!editable} data-testid={'label'}>
             {label}

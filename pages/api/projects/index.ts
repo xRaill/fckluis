@@ -11,8 +11,10 @@ const Projects = ApiHandler(async (req, res) => {
 
   const loggedIn = validateAccessToken(accessToken);
 
-  const { search, order, labels } = <Record<string, string>>req.query;
+  const { search, order, labels, page = 1 } = <Record<string, string>>req.query;
 
+  if (page && typeof page === 'number')
+    formError('page', 'Invalid page number');
   if (labels && labels.match(/([^\p{L},])/gu))
     formError('labels', 'Contains illegal character');
   if (order && !['desc', 'asc'].includes(order))
@@ -44,24 +46,32 @@ const Projects = ApiHandler(async (req, res) => {
       }
     : {};
 
-  const dbProjects = await Project.findAll({
+  const { count, rows } = await Project.findAndCountAll({
     where: {
       ...labelsquery,
       ...searchquery,
       ...publicquery,
     },
+    limit: 9,
+    offset: ((page as number) - 1) * 9,
     order: [['createdAt', order || 'desc']],
     include: [Label],
   });
 
-  const projects = dbProjects
+  const projects = rows
     .map((a) => a.toJSON())
     .map((project: Project) => ({
       ...project,
       labels: project.labels.map((a) => a.name),
     }));
 
-  return res.json({ success: true, projects });
+  return res.json({
+    success: true,
+    projects,
+    more: (page as number) * 9 < count,
+    // test: page * 9,
+    // count,
+  });
 });
 
 export default Projects;

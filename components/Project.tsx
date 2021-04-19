@@ -103,7 +103,7 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
 
 export default Project;
 
-interface ProjectDetails {
+export interface ProjectDetails {
   id: number;
   title: string;
   description: string;

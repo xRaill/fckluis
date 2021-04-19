@@ -18,21 +18,55 @@ const Home: React.FC = () => {
   const { submit, callback, active } = useApi('projects', 'GET');
   const { initialized } = useSession();
   const [projects, setProjects] = useState([]);
-  const [search, setSearch] = useState<Array<string | string[]>>();
+  const [search, setSearch] = useState<Array<string | number | string[]>>();
+  const [page, setPage] = useState<number>();
+  const [loadMoreActive, setLoadMoreActive] = useState(false);
 
-  callback(async (data) => {
-    const body = await data.json();
-    if (body.success) {
-      setProjects(body.projects);
-    }
-  });
+  callback(
+    async (data) => {
+      const body = await data.json();
+      if (body.success) {
+        setProjects(page ? projects.concat(body.projects) : body.projects);
+        setPage(body.more ? (page || 1) + 1 : undefined);
+        setLoadMoreActive(false);
+      }
+    },
+    [projects, page]
+  );
 
   useEffect(() => {
     if (initialized && search) {
-      setProjects([]);
-      submit({ search: search[0], order: search[1], labels: search[2] });
+      if (!loadMoreActive) setProjects([]);
+      submit({
+        search: search[0],
+        order: search[1],
+        labels: search[2],
+        page: search[3] || 1,
+      });
     }
   }, [initialized, search]);
+
+  const scrollEvent = (e) => {
+    if (
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight &&
+      page &&
+      !loadMoreActive
+    ) {
+      setLoadMoreActive(true);
+      submit({
+        search: search[0],
+        order: search[1],
+        labels: search[2],
+        page,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const el = document.querySelector('.simplebar-content-wrapper');
+    el.addEventListener('scroll', scrollEvent);
+    return () => el.removeEventListener('scroll', scrollEvent);
+  }, [page, search, loadMoreActive]);
 
   return (
     <Layout>

@@ -8,7 +8,7 @@ type Api = (
   method?: 'POST' | 'GET' | 'DELETE'
 ) => {
   active: boolean;
-  callback: (fn: callback) => void;
+  callback: (fn: callback, mem?: unknown[]) => void;
   submit: (data?: Record<string, unknown>) => void;
 };
 
@@ -35,10 +35,10 @@ const useApi: Api = (path, method) => {
     }, 500);
   };
 
-  const cb = (fn: callback) =>
+  const cb = (fn: callback, mem?: unknown[]) =>
     useMemo(() => {
       setCallback(() => fn);
-    }, []);
+    }, mem || []);
 
   return { active, submit, callback: cb };
 };

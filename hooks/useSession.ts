@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { update } from 'reducers/sessionSlice';
 import { useAppDispatch, useAppSelector } from 'utils/store';
 

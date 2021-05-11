@@ -59,7 +59,6 @@ const Home: React.FC = () => {
       page.current &&
       !loadMoreActive
     ) {
-      setVisible(false);
       setLoadMoreActive(true);
       submit({
         search: search[0],

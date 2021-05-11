@@ -79,13 +79,15 @@ const Search: React.FC<Search> = ({ active, setSearch }) => {
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = e.currentTarget.value;
-    setTerm(value);
-    setSearching(true);
-    clearTimeout(delayTimer);
-    delayTimer = setTimeout(() => {
-      setSearch([value, order, labels]);
-      setSearching(false);
-    }, 1000);
+    if (value.length === 0 || value.length >= 3) {
+      setTerm(value);
+      setSearching(true);
+      clearTimeout(delayTimer);
+      delayTimer = setTimeout(() => {
+        setSearch([value, order, labels]);
+        setSearching(false);
+      }, 1000);
+    }
   };
 
   const handleSelectChange: ChangeEventHandler<HTMLSelectElement> = (e) => {

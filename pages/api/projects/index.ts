@@ -25,6 +25,7 @@ const Projects = ApiHandler(async (req, res) => {
         [Op.or]: {
           title: { [Op.like]: `%${search}%` },
           description: { [Op.like]: `%${search}%` },
+          author: { [Op.like]: `%${search}%` },
         },
       }
     : {};
@@ -69,8 +70,6 @@ const Projects = ApiHandler(async (req, res) => {
     success: true,
     projects,
     more: (page as number) * 9 < count,
-    // test: page * 9,
-    // count,
   });
 });
 

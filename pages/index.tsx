@@ -3,6 +3,7 @@ import Loading from 'components/Loading';
 import Project from 'components/Project';
 import Search from 'components/Search';
 import useApi from 'hooks/useApi';
+import useRefState from 'hooks/useRefState';
 import useSession from 'hooks/useSession';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -17,18 +18,22 @@ const ProjectWrapper = styled.div`
 const Home: React.FC = () => {
   const { submit, callback, active } = useApi('projects', 'GET');
   const { initialized } = useSession();
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useRefState([]);
   const [search, setSearch] = useState<Array<string | number | string[]>>();
-  const [page, setPage] = useState<number>();
+  const [page, setPage] = useRefState<number>();
   const [loadMoreActive, setLoadMoreActive] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   callback(
     async (data) => {
       const body = await data.json();
       if (body.success) {
-        setProjects(page ? projects.concat(body.projects) : body.projects);
-        setPage(body.more ? (page || 1) + 1 : undefined);
+        setProjects(
+          page.current ? projects.current.concat(body.projects) : body.projects
+        );
+        setPage(body.more ? (page.current || 1) + 1 : undefined);
         setLoadMoreActive(false);
+        setVisible(true);
       }
     },
     [projects, page]
@@ -36,7 +41,9 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (initialized && search) {
-      if (!loadMoreActive) setProjects([]);
+      setProjects([]);
+      setPage(undefined);
+      setVisible(false);
       submit({
         search: search[0],
         order: search[1],
@@ -49,15 +56,16 @@ const Home: React.FC = () => {
   const scrollEvent = (e) => {
     if (
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight &&
-      page &&
+      page.current &&
       !loadMoreActive
     ) {
+      setVisible(false);
       setLoadMoreActive(true);
       submit({
         search: search[0],
         order: search[1],
         labels: search[2],
-        page,
+        page: page.current,
       });
     }
   };
@@ -71,9 +79,9 @@ const Home: React.FC = () => {
   return (
     <Layout>
       <Search setSearch={setSearch} active={active} />
-      <Loading active={!!projects.length}>
+      <Loading active={visible}>
         <ProjectWrapper>
-          {projects.map((project, i) => (
+          {projects.current.map((project, i) => (
             <Project
               key={i}
               id={project.id}

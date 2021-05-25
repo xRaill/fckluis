@@ -20,6 +20,10 @@ export class Project extends Model {
   @Column(DataType.INTEGER)
   id: number;
 
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  thumbnail: string;
+
   @AllowNull(false)
   @Column(DataType.STRING)
   title: string;

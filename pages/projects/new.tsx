@@ -10,6 +10,7 @@ import FormLabels from 'components/Form/FormLabels';
 import FormCheckbox from 'components/Form/FormCheckbox';
 import Loading from 'components/Loading';
 import FormItem from 'components/Form/FormItem';
+import FormImageUpload from 'components/Form/FormImageUpload';
 
 const NewProject: React.FC = () => {
   const { loggedIn, authenticate } = useSession();
@@ -27,6 +28,7 @@ const NewProject: React.FC = () => {
     <Layout>
       <Loading active={loggedIn}>
         <Form path={'projects/create'} onSuccess={handleSuccess}>
+          <FormImageUpload name={'thumbnail'} />
           <FormField name={'title'} />
           <FormArea name={'description'} />
           <FormField name={'author'} />

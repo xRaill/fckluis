@@ -88,6 +88,7 @@ const Home: React.FC = () => {
               description={project.description}
               author={project.author}
               labels={project.labels}
+              thumbnail={project.thumbnail}
             />
           ))}
         </ProjectWrapper>

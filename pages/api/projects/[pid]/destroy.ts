@@ -1,8 +1,9 @@
 import { ApiHandler, formError, validateAccessToken } from 'utils/api';
 import { Project } from 'db/models/Project';
 import { ProjectLabel } from 'db/models/ProjectLabel';
+import { mkdirSync, unlinkSync } from 'fs';
 
-const UpdateProject = ApiHandler(async (req, res) => {
+const DestroyProject = ApiHandler(async (req, res) => {
   if (!['DELETE'].includes(req.method))
     formError('base', `Method ${req.method} not allowed`);
 
@@ -17,6 +18,15 @@ const UpdateProject = ApiHandler(async (req, res) => {
 
   if (!project) formError('base', 'Project not found');
 
+  // DESTROYING THUMBNAIL
+
+  if (project.get('thumbnail')) {
+    mkdirSync('public/uploads/thumbnails', { recursive: true });
+    unlinkSync(`public/uploads/thumbnails/${project.get('thumbnail')}.jpg`);
+  }
+
+  // DESTROYING LABELS
+
   const labels = await project.$get('labels');
 
   labels.forEach(async (label) => {
@@ -26,9 +36,11 @@ const UpdateProject = ApiHandler(async (req, res) => {
       await label.destroy();
   });
 
+  // DESTROYING PROJECT
+
   await project.destroy();
 
   return res.json({ success: true });
 });
 
-export default UpdateProject;
+export default DestroyProject;

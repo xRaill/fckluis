@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import FormError from './FormError';
 
-const InputItem = styled.div<{ inline?: boolean }>`
-  display: ${({ inline }) => (inline ? 'flex' : 'block')};
+const InputItem = styled.div<{ inline: boolean; hidden: boolean }>`
+  display: ${({ hidden, inline }) =>
+    hidden ? 'none' : inline ? 'flex' : 'block'};
   align-items: center;
   margin: 15px auto;
   width: 90vw;
@@ -26,11 +27,12 @@ const Label = styled.label<{ inline?: boolean }>`
 interface FormItem {
   name?: string;
   inline?: boolean;
+  hidden?: boolean;
 }
 
-const FormItem: React.FC<FormItem> = ({ name, inline, children }) => (
-  <InputItem inline={inline}>
-    {name && (
+const FormItem: React.FC<FormItem> = ({ name, inline, hidden, children }) => (
+  <InputItem {...{ inline, hidden }}>
+    {!hidden && name && (
       <Label htmlFor={name} inline={inline}>
         {name[0].toUpperCase() + name.slice(1)}
       </Label>

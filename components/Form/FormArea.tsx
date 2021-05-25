@@ -18,24 +18,22 @@ const Input = styled.textarea`
 
 interface FormArea {
   name: string;
-  value?: string;
+  defaultValue?: string;
   placeholder?: string;
 }
 
-const FormArea: React.FC<FormArea> = ({ name, value, placeholder }) => {
+const FormArea: React.FC<FormArea> = ({ name, defaultValue, placeholder }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(updateData({ field: name, value }));
+    dispatch(updateData({ field: name, value: defaultValue }));
   }, []);
 
   return (
     <FormItem name={name}>
       <Input
         id={name}
-        name={name}
-        defaultValue={value}
-        placeholder={placeholder}
+        {...{ name, defaultValue, placeholder }}
         onChange={(e) =>
           dispatch(updateData({ field: name, value: e.currentTarget.value }))
         }

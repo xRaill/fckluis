@@ -10,10 +10,10 @@ const Button = styled.button<{ active?: boolean; color?: string }>`
     theme.colors['light' + (color || 'purple')]};
   color: lightgray;
   padding: 15px 20px;
-  margin: 0 auto;
+  margin: 10px auto;
   border-radius: 5px;
   cursor: pointer;
-  width: 100px;
+  min-width: 100px;
   transition: background-color 0.5s;
   &:hover {
     background-color: ${({ theme, color }) => theme.colors[color || 'purple']};

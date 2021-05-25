@@ -13,6 +13,7 @@ import useApi from 'hooks/useApi';
 import Loading from 'components/Loading';
 import { Project } from 'db/models/Project';
 import FormItem from 'components/Form/FormItem';
+import FormImageUpload from 'components/Form/FormImageUpload';
 
 const EditProject: React.FC = () => {
   const {
@@ -66,9 +67,16 @@ const EditProject: React.FC = () => {
     <Layout>
       <Loading active={!!Object.values(project).length}>
         <Form path={`projects/${pid}/update`} onSuccess={handleSuccess}>
-          <FormField name={'title'} value={project.title} />
-          <FormArea name={'description'} value={project.description} />
-          <FormField name={'author'} value={project.author} />
+          <FormImageUpload
+            name={'thumbnail'}
+            src={
+              project.thumbnail &&
+              `/uploads/thumbnails/${project.thumbnail}.jpg`
+            }
+          />
+          <FormField name={'title'} defaultValue={project.title} />
+          <FormArea name={'description'} defaultValue={project.description} />
+          <FormField name={'author'} defaultValue={project.author} />
           <FormLabels
             name={'labels'}
             activeLabels={(project.labels as unknown) as string[]}

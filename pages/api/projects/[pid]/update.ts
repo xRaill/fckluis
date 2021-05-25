@@ -7,6 +7,9 @@ import {
 import { Project } from 'db/models/Project';
 import { Label } from 'db/models/Label';
 import { ProjectLabel } from 'db/models/ProjectLabel';
+import fileType from 'file-type';
+import { mkdirSync, unlinkSync, writeFileSync } from 'fs';
+import { createHmac } from 'crypto';
 
 const UpdateProject = ApiHandler(async (req, res) => {
   if (!['POST'].includes(req.method))
@@ -18,26 +21,60 @@ const UpdateProject = ApiHandler(async (req, res) => {
   if (!loggedIn) formError('base', 'Not authorized');
 
   const { pid } = req.query as Record<string, unknown>;
-  const { title, description, author, public: aPublic, labels } = JSON.parse(
-    req.body
-  );
+  const {
+    thumbnail,
+    title,
+    description,
+    author,
+    public: aPublic,
+    labels,
+  } = JSON.parse(req.body);
+
+  const thumbnailBuffer = thumbnail && Buffer.from(thumbnail, 'base64');
 
   const errors = new formErrorCollection();
   if (!title) errors.add('title', 'Title required');
   if (!description) errors.add('description', 'Description required');
   if (!author) errors.add('author', 'Author required');
+  if (thumbnail && (await fileType.fromBuffer(thumbnailBuffer))?.ext !== 'jpg')
+    errors.add('thumbnail', 'Invalid filetype');
   errors.resolve();
 
   const project = await Project.findByPk(pid as number);
 
   if (!project) formError('base', 'Project not found');
 
+  // UPDATING THUMBNAIL
+
+  const thumbnailHash = thumbnail
+    ? createHmac('sha1', 'secret').update(thumbnailBuffer).digest('hex')
+    : '';
+
+  if (typeof thumbnail !== 'undefined') {
+    mkdirSync('public/uploads/thumbnails', { recursive: true });
+    if (project.get('thumbnail')) {
+      console.log(project.get('thumbnail'));
+      unlinkSync(`public/uploads/thumbnails/${project.get('thumbnail')}.jpg`);
+    }
+
+    if (thumbnailHash)
+      writeFileSync(
+        `public/uploads/thumbnails/${thumbnailHash}.jpg`,
+        thumbnailBuffer
+      );
+  }
+
+  // UPDATING BASIC INFO
+
   await project.update({
     title,
     description,
     author,
     public: aPublic,
+    thumbnail: typeof thumbnail === 'undefined' ? undefined : thumbnailHash,
   });
+
+  // UPDATING LABELS
 
   const dbLabels = await project.$get('labels');
 

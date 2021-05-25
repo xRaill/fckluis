@@ -16,25 +16,33 @@ const Input = styled.input`
 interface FormInput {
   name: string;
   type?: string;
-  value?: string;
+  value?: string | number;
+  defaultValue?: string;
   placeholder?: string;
 }
 
-const FormField: React.FC<FormInput> = ({ name, type, value, placeholder }) => {
+const FormField: React.FC<FormInput> = ({
+  name,
+  type,
+  defaultValue,
+  value,
+  placeholder,
+}) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(updateData({ field: name, value }));
+  }, [value]);
+
+  useEffect(() => {
+    dispatch(updateData({ field: name, value: defaultValue }));
   }, []);
 
   return (
-    <FormItem name={name}>
+    <FormItem name={name} hidden={type === 'hidden'}>
       <Input
         id={name}
-        name={name}
-        type={type}
-        defaultValue={value}
-        placeholder={placeholder}
+        {...{ name, type, defaultValue, value, placeholder }}
         onChange={(e) =>
           dispatch(updateData({ field: name, value: e.currentTarget.value }))
         }

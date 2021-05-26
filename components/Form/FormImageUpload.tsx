@@ -84,17 +84,14 @@ const FormImageUpload: React.FC<FormImageUpload> = ({ name, src }) => {
   }, [imageURL, crop]);
 
   const handleFileChange = async (file: Blob = null) => {
-    if (!file) {
+    if (!file?.type?.match('image/')) {
       setImageURL(undefined);
-
-      dispatch(
+      return dispatch(
         updateData({
           field: name,
           value: null,
         })
       );
-
-      return;
     }
 
     new Compressor(file, {
@@ -117,6 +114,7 @@ const FormImageUpload: React.FC<FormImageUpload> = ({ name, src }) => {
       <input
         type={'file'}
         ref={fileInputRef}
+        accept={'image/*'}
         onChange={(e) => handleFileChange(e.target.files[0])}
         style={{ height: 0, visibility: 'hidden' }}
       />
@@ -136,7 +134,6 @@ const FormImageUpload: React.FC<FormImageUpload> = ({ name, src }) => {
           <FormButton color={'red'} onClick={() => handleFileChange()}>
             Remove image
           </FormButton>
-          <img id={'test2'} />
         </CropperWrapper>
       ) : (
         <FormButton onClick={() => fileInputRef.current.click()}>

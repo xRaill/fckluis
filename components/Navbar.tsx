@@ -96,10 +96,10 @@ const Navbar: React.FC<Navbar> = ({ visible }) => {
       </NavBtn>
       <Nav visible={visible} open={menu}>
         {MenuItems.map(
-          (item) =>
+          (item, i) =>
             (item.loggedIn === loggedIn ||
               typeof item.loggedIn === 'undefined') && (
-              <Link href={item.href} passHref>
+              <Link key={i} href={item.href} passHref>
                 <NavItem left={item.left} onClick={() => setMenu(false)}>
                   {item.name}
                 </NavItem>

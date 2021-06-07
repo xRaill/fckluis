@@ -26,9 +26,6 @@ const CropperWrapper = styled.div`
 interface FormImageUpload {
   name: string;
   src?: string;
-  x?: number;
-  y?: number;
-  scale?: number;
 }
 
 const FormImageUpload: React.FC<FormImageUpload> = ({ name, src }) => {

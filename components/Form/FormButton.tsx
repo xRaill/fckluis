@@ -21,7 +21,7 @@ const Button = styled.button<{ active?: boolean; color?: string }>`
   & span {
     display: ${({ active }) => active && 'none'};
   }
-  & svg {
+  & .spinner {
     display: ${({ active }) => !active && 'none'};
   }
 `;
@@ -42,7 +42,14 @@ const FormButton: React.FC<FormButton> = ({ children, color, onClick }) => {
       onClick={onClick || (() => dispatch(start()))}
     >
       <span>{children}</span>
-      <FontAwesomeIcon icon={faCircleNotch} size={'lg'} spin />
+      {active && (
+        <FontAwesomeIcon
+          className={'spinner'}
+          icon={faCircleNotch}
+          size={'lg'}
+          spin
+        />
+      )}
     </Button>
   );
 };

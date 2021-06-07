@@ -1,4 +1,4 @@
-import { faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faQuestion, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useSession from 'hooks/useSession';
 import { useRouter } from 'next/router';
@@ -21,11 +21,12 @@ const Background = styled.div<{ active: boolean }>`
   transition: background-color 0.5s;
   background-color: ${({ active }) =>
     active ? 'rgba(0, 0, 0, 0.5)' : 'transparent'};
+  z-index: 1;
 `;
 
 const Position = styled.div<{ x: number; y: number; center: boolean }>`
-  transition: all 0.5s cubic-bezier(0.47, 0.23, 0.34, 1.29);
-  /* transition: all 0.5s ease-in-out; */
+  /* transition: all 0.5s cubic-bezier(0.47, 0.23, 0.34, 1.29); */
+  transition: all 0.5s ease-in-out;
   position: absolute;
   top: ${({ center, y }) => (center ? 0 : `${y}px`)};
   left: ${({ center, x }) => (center ? 0 : `${x}px`)};
@@ -111,6 +112,7 @@ export interface ProjectDetails {
   labels: string[];
   url: string;
   file: string;
+  thumbnail: string;
 }
 
 const ModalBody = styled.div<{ active: boolean }>`
@@ -172,8 +174,19 @@ const ModalBody = styled.div<{ active: boolean }>`
     transition: all 0.5s;
     aspect-ratio: 16 / 9;
     width: 100%;
-    height: auto;
+    height: 100%;
     max-width: 100vw;
+    overflow: hidden;
+    background-color: lightgrey;
+    min-height: 29vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > img {
+      /* position: relative; */
+      width: 100%;
+      height: 100%;
+    }
   }
   & .label {
     font-weight: bold;
@@ -200,6 +213,7 @@ const Modal: React.FC<Modal> = ({
   labels,
   url,
   file,
+  thumbnail,
   loggedIn,
   close,
   edit,
@@ -209,7 +223,13 @@ const Modal: React.FC<Modal> = ({
       <FontAwesomeIcon icon={faTimes} size={'2x'} onClick={close} />
       {loggedIn && <FontAwesomeIcon icon={faEdit} size={'2x'} onClick={edit} />}
     </div>
-    <img className={'thumbnail'} src={'/placeholder.jpg'} />
+    <div className={'thumbnail'}>
+      {thumbnail ? (
+        <img src={`/uploads/thumbnails/${thumbnail}.jpg`} loading={'lazy'} />
+      ) : (
+        <FontAwesomeIcon icon={faQuestion} size={'4x'} />
+      )}
+    </div>
     <div className={'hide-on-active'}>
       <Labels activeLabels={labels} />
     </div>
@@ -226,18 +246,22 @@ const Modal: React.FC<Modal> = ({
       <div className={'label'}>Gemaakt door</div>
       <div className={'author'}>{author}</div>
     </div>
-    <div className={'row'}>
-      <div className={'label'}>Labels</div>
-      <div className={'labels'}>
-        <Labels activeLabels={labels} />
+    {!!labels.length && (
+      <div className={'row'}>
+        <div className={'label'}>Labels</div>
+        <div className={'labels'}>
+          <Labels activeLabels={labels} />
+        </div>
       </div>
-    </div>
-    <div className={'row'}>
-      <div className={'label'}>URL</div>
-      <div className={'url'}>
-        <a href={url}>{url}</a>
+    )}
+    {url && (
+      <div className={'row'}>
+        <div className={'label'}>URL</div>
+        <div className={'url'}>
+          <a href={url}>{url}</a>
+        </div>
       </div>
-    </div>
+    )}
     {file && (
       <div className={'row'}>
         <div className={'label'}>Download</div>

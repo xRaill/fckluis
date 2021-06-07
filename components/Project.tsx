@@ -178,6 +178,11 @@ const ModalBody = styled.div<{ active: boolean }>`
   & .label {
     font-weight: bold;
   }
+  & a {
+    color: darkblue;
+    cursor: pointer;
+    text-decoration: underline;
+  }
 `;
 
 interface Modal extends Partial<ProjectDetails> {
@@ -236,7 +241,11 @@ const Modal: React.FC<Modal> = ({
     {file && (
       <div className={'row'}>
         <div className={'label'}>Download</div>
-        <div className={'files'}>{file}</div>
+        <div className={'files'}>
+          <a onClick={() => window.open(`/uploads/files/${file}`, '_self')}>
+            {file}
+          </a>
+        </div>
       </div>
     )}
   </ModalBody>

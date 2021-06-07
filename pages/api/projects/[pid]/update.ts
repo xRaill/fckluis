@@ -23,6 +23,8 @@ const UpdateProject = ApiHandler(async (req, res) => {
   const { pid } = req.query as Record<string, unknown>;
   const {
     thumbnail,
+    file,
+    file_name,
     title,
     description,
     author,
@@ -31,12 +33,16 @@ const UpdateProject = ApiHandler(async (req, res) => {
   } = JSON.parse(req.body);
 
   const thumbnailBuffer = thumbnail && Buffer.from(thumbnail, 'base64');
+  const fileBuffer = file && Buffer.from(file, 'base64');
 
   const errors = new formErrorCollection();
   if (!title) errors.add('title', 'Title required');
   if (!description) errors.add('description', 'Description required');
   if (!author) errors.add('author', 'Author required');
-  if (thumbnail && (await fileType.fromBuffer(thumbnailBuffer))?.ext !== 'jpg')
+  if (
+    thumbnail &&
+    (await fileType.fromBuffer(thumbnailBuffer))?.mime !== 'image/jpeg'
+  )
     errors.add('thumbnail', 'Invalid filetype');
   errors.resolve();
 
@@ -52,16 +58,30 @@ const UpdateProject = ApiHandler(async (req, res) => {
 
   if (typeof thumbnail !== 'undefined') {
     mkdirSync('public/uploads/thumbnails', { recursive: true });
-    if (project.get('thumbnail')) {
-      console.log(project.get('thumbnail'));
+    if (project.get('thumbnail'))
       unlinkSync(`public/uploads/thumbnails/${project.get('thumbnail')}.jpg`);
-    }
 
     if (thumbnailHash)
       writeFileSync(
         `public/uploads/thumbnails/${thumbnailHash}.jpg`,
         thumbnailBuffer
       );
+  }
+
+  // UPDATRING FILE
+
+  const fileName = file
+    ? file_name
+      ? project.get('id') + '-' + file_name
+      : createHmac('sha1', 'secret').update(fileBuffer).digest('hex') + '.zip'
+    : '';
+
+  if (typeof file !== 'undefined') {
+    mkdirSync('public/uploads/files', { recursive: true });
+    if (project.get('file'))
+      unlinkSync(`public/uploads/files/${project.get('file')}`);
+
+    if (file) writeFileSync(`public/uploads/files/${fileName}`, fileBuffer);
   }
 
   // UPDATING BASIC INFO
@@ -72,6 +92,7 @@ const UpdateProject = ApiHandler(async (req, res) => {
     author,
     public: aPublic,
     thumbnail: typeof thumbnail === 'undefined' ? undefined : thumbnailHash,
+    file: typeof file === 'undefined' ? undefined : fileName,
   });
 
   // UPDATING LABELS

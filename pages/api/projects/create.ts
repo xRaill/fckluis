@@ -22,6 +22,8 @@ const CreateProject = ApiHandler(async (req, res) => {
 
   const {
     thumbnail,
+    file,
+    file_name,
     title,
     description,
     author,
@@ -30,6 +32,7 @@ const CreateProject = ApiHandler(async (req, res) => {
   } = JSON.parse(req.body);
 
   const thumbnailBuffer = thumbnail && Buffer.from(thumbnail, 'base64');
+  const fileBuffer = file && Buffer.from(file, 'base64');
 
   const errors = new formErrorCollection();
   if (!title) errors.add('title', 'Title required');
@@ -60,6 +63,18 @@ const CreateProject = ApiHandler(async (req, res) => {
     author,
     thumbnail: thumbnailHash,
   });
+
+  // UPDATRING FILE
+
+  const fileName = file
+    ? file_name
+      ? project.get('id') + '-' + file_name
+      : createHmac('sha1', 'secret').update(fileBuffer).digest('hex') + '.zip'
+    : '';
+
+  if (typeof file !== 'undefined') {
+    if (file) writeFileSync(`public/uploads/files/${fileName}`, fileBuffer);
+  }
 
   // CREATING LABELS
 

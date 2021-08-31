@@ -33,6 +33,7 @@ const NewProject: React.FC = () => {
           <FormField name={'title'} />
           <FormArea name={'description'} />
           <FormField name={'author'} />
+          <FormField name={'url'} />
           <FormFileUpload
             name={'file'}
             accept={

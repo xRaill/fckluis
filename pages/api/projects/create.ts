@@ -27,6 +27,7 @@ const CreateProject = ApiHandler(async (req, res) => {
     title,
     description,
     author,
+    url,
     public: aPublic,
     labels,
   } = JSON.parse(req.body);
@@ -60,6 +61,7 @@ const CreateProject = ApiHandler(async (req, res) => {
     title,
     description,
     public: aPublic,
+    url,
     author,
     thumbnail: thumbnailHash,
   });

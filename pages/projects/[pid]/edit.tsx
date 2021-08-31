@@ -78,6 +78,7 @@ const EditProject: React.FC = () => {
           <FormField name={'title'} defaultValue={project.title} />
           <FormArea name={'description'} defaultValue={project.description} />
           <FormField name={'author'} defaultValue={project.author} />
+          <FormField name={'url'} defaultValue={project.url} />
           <FormFileUpload
             name={'file'}
             accept={

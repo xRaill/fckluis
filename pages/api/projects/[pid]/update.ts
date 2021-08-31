@@ -37,6 +37,7 @@ const UpdateProject = ApiHandler(async (req, res) => {
     description,
     author,
     public: aPublic,
+    url,
     labels,
   } = JSON.parse(req.body);
 
@@ -98,6 +99,7 @@ const UpdateProject = ApiHandler(async (req, res) => {
     title,
     description,
     author,
+    url,
     public: aPublic,
     thumbnail: typeof thumbnail === 'undefined' ? undefined : thumbnailHash,
     file: typeof file === 'undefined' ? undefined : fileName,

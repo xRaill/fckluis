@@ -5,7 +5,7 @@ import FormButton from './FormButton';
 import { useAppDispatch } from 'utils/store';
 import { updateData } from 'reducers/formSlice';
 
-const FileInput = styled.label<{ active: boolean }>`
+export const FileInput = styled.label<{ active: boolean }>`
   display: flex;
   align-items: stretch;
   button:first-child {

@@ -7,7 +7,7 @@ import { updateData } from 'reducers/formSlice';
 import Compressor from 'compressorjs';
 import Cropper from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import FormField from './FormField';
+import { FileInput } from './FormFileUpload';
 
 const CropperWrapper = styled.div`
   display: flex;
@@ -134,9 +134,12 @@ const FormImageUpload: React.FC<FormImageUpload> = ({ name, src }) => {
           </FormButton>
         </CropperWrapper>
       ) : (
-        <FormButton onClick={() => fileInputRef.current.click()}>
-          Add image
-        </FormButton>
+        <FileInput active={true}>
+          <FormButton onClick={() => fileInputRef.current.click()}>
+            Add
+          </FormButton>
+          <span>No thumbnail selected</span>
+        </FileInput>
       )}
     </FormItem>
   );

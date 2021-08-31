@@ -28,21 +28,27 @@ const Button = styled.button<{ active?: boolean; color?: string }>`
 
 interface FormButton {
   color?: string;
+  loading?: boolean;
   onClick?: VoidFunction;
 }
 
-const FormButton: React.FC<FormButton> = ({ children, color, onClick }) => {
+const FormButton: React.FC<FormButton> = ({
+  children,
+  color,
+  loading,
+  onClick,
+}) => {
   const { active } = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
 
   return (
     <Button
-      active={onClick ? false : active}
+      active={onClick ? loading : active}
       color={color}
       onClick={onClick || (() => dispatch(start()))}
     >
       <span>{children}</span>
-      {active && (
+      {(active || loading) && (
         <FontAwesomeIcon
           className={'spinner'}
           icon={faCircleNotch}

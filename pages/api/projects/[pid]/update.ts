@@ -11,6 +11,14 @@ import fileType from 'file-type';
 import { mkdirSync, unlinkSync, writeFileSync } from 'fs';
 import { createHmac } from 'crypto';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '340MB',
+    },
+  },
+};
+
 const UpdateProject = ApiHandler(async (req, res) => {
   if (!['POST'].includes(req.method))
     formError('base', `Method ${req.method} not allowed`);

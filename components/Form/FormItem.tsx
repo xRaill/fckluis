@@ -11,9 +11,6 @@ const InputItem = styled.div<{ inline: boolean; hidden: boolean }>`
   @media (min-width: 767px) {
     width: 40vw;
   }
-  /* & button {
-    margin: 0 auto;
-  } */
 `;
 
 const Label = styled.label<{ inline?: boolean }>`

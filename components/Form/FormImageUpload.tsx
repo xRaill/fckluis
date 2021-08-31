@@ -7,6 +7,7 @@ import { updateData } from 'reducers/formSlice';
 import Compressor from 'compressorjs';
 import Cropper from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import FormField from './FormField';
 
 const CropperWrapper = styled.div`
   display: flex;
@@ -113,7 +114,7 @@ const FormImageUpload: React.FC<FormImageUpload> = ({ name, src }) => {
         ref={fileInputRef}
         accept={'image/*'}
         onChange={(e) => handleFileChange(e.target.files[0])}
-        style={{ height: 0, visibility: 'hidden' }}
+        style={{ display: 'none' }}
       />
       {imageURL ? (
         <CropperWrapper ref={cropperRef}>

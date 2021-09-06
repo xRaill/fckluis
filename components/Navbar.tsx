@@ -75,6 +75,11 @@ const MenuItems = [
     loggedIn: true,
   },
   {
+    href: '/users',
+    name: 'Users',
+    loggedIn: true,
+  },
+  {
     href: '/logout',
     name: 'Logout',
     loggedIn: true,

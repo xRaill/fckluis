@@ -6,7 +6,7 @@ module.exports = {
     },
     {
       source: '/maildev',
-      destination: '/api/dev/mailcatcher',
+      destination: '/api/dev/maildev',
     },
   ],
 };

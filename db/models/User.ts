@@ -16,17 +16,7 @@ import {
 import '../';
 import { Session } from './Session';
 
-@Table({
-  validate: {
-    'password_verify||password_match': function (cb: (msg: string) => void) {
-      if (
-        this.get('password') &&
-        this.get('password') !== this.get('password_verify')
-      )
-        cb('Passwords do not match');
-    },
-  },
-})
+@Table
 export class User extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -56,6 +46,12 @@ export class User extends Model {
   static async hashPassword(user: User): Promise<void> {
     if (user.get('password'))
       user.set('hashed_password', await hash(user.get('password')));
+  }
+
+  verifyPasswordMatch(): boolean {
+    if (this.get('password') && this.get('password_verify')) {
+      return this.get('password') !== this.get('password_verify');
+    } else return false;
   }
 
   async validatePassword(password: string): Promise<boolean> {

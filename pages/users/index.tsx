@@ -76,7 +76,7 @@ const Users: React.FC = () => {
       <Loading active={loggedIn && !!data.length}>
         <Container>
           <div>
-            <Link href={'/'}>
+            <Link href={'/users/new'} passHref>
               <LinkButton>Add user</LinkButton>
             </Link>
           </div>

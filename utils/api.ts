@@ -2,6 +2,8 @@ import { verify } from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { ValidationError } from 'sequelize/types';
 
+const { ACCESS_SECRET } = process.env;
+
 type apiContext = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 
 type ApiHandler = (func: apiContext) => apiContext;
@@ -57,7 +59,7 @@ type validateAccessToken = (accessToken: string) => any;
 export const validateAccessToken: validateAccessToken = (accessToken) => {
   if (!accessToken) return false;
   try {
-    return verify(accessToken, process.env.ACCESS_SECRET);
+    return verify(accessToken, ACCESS_SECRET);
   } catch {
     return false;
   }

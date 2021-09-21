@@ -4,9 +4,5 @@ module.exports = {
       source: '/index.php',
       destination: '/',
     },
-    {
-      source: '/maildev',
-      destination: '/api/dev/maildev',
-    },
   ],
 };

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const TableContainer = styled.table`
   border-collapse: collapse;
+  margin-bottom: 100px;
 `;
 
 const Header = styled.div`
@@ -39,14 +40,14 @@ const Table: React.FC<Table> = ({ headers, data, children: handleRow }) => {
   return (
     <TableContainer>
       <Header>
-        {headers.map((name) => (
-          <div>{name}</div>
+        {headers.map((name, i) => (
+          <div key={i}>{name}</div>
         ))}
       </Header>
-      {data.map((row) => (
-        <Row>
-          {handleRow(row).map((column) => (
-            <div>{column}</div>
+      {data.map((row, i) => (
+        <Row key={i}>
+          {handleRow(row).map((column, i) => (
+            <div key={i}>{column}</div>
           ))}
         </Row>
       ))}

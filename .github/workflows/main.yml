@@ -36,8 +36,8 @@ jobs:
       - name: Check for linting errors
         run: yarn lint
 
-      - name: Test application
-        run: yarn test
+      # - name: Test application
+      #   run: yarn test
 
   deploy:
     runs-on: ubuntu-latest

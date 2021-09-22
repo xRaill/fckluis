@@ -12,6 +12,7 @@ import {
   PrimaryKey,
   Table,
   Unique,
+  Length,
 } from 'sequelize-typescript';
 import '../';
 import { Session } from './Session';
@@ -32,11 +33,19 @@ export class User extends Model {
   @Column(DataType.STRING)
   hashed_password: string;
 
+  @Length({
+    min: 4,
+    max: 30,
+    msg: 'Password needs to be between 4 and 30 characters long!',
+  })
   @Column(DataType.VIRTUAL)
   password: string;
 
   @Column(DataType.VIRTUAL)
   password_verify: string;
+
+  @Column(DataType.STRING)
+  signup_token: string;
 
   @HasMany(() => Session)
   sessions: Session[];

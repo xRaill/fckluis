@@ -1,5 +1,8 @@
 import { ApiHandler, formError, validateAccessToken } from 'utils/api';
 import { User } from 'db/models/User';
+import validator from 'validator';
+import nodemailer from 'utils/nodemailer';
+import { v4 } from 'uuid';
 
 const NewUser = ApiHandler(async (req, res) => {
   if (!['POST'].includes(req.method))
@@ -15,13 +18,28 @@ const NewUser = ApiHandler(async (req, res) => {
 
   if (!email) formError('email', "Can't be empty");
 
+  if (!validator.isEmail(email)) formError('email', 'Is not a valid email');
+
   const user = await User.findOne({ where: { email } });
 
   if (user) formError('email', 'User with this email already exists');
 
-  // Create user
+  const newUser = await User.create({
+    signup_token: v4(),
+    email,
+  });
 
-  // Send email with reg token
+  nodemailer.sendMail({
+    from: 'FC Kluis <info@kluis.fc.school>',
+    to: newUser.get('email'),
+    subject: 'Uitnodiging voor FC Kluis!',
+    text: `You received a request to create an account on FC Kluis! http://localhost:3000/register?token=${newUser.get(
+      'signup_token'
+    )}'`,
+    html: `You received a request to create an account on FC Kluis! <br><br> <a href="http://localhost:3000/register?token=${newUser.get(
+      'signup_token'
+    )}">Click here to sign up!</a>`,
+  });
 
   return res.json({
     success: true,

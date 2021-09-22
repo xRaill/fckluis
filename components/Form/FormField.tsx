@@ -15,6 +15,7 @@ const Input = styled.input`
 
 interface FormInput {
   name: string;
+  title?: string;
   type?: string;
   value?: string | number;
   defaultValue?: string;
@@ -23,6 +24,7 @@ interface FormInput {
 
 const FormField: React.FC<FormInput> = ({
   name,
+  title,
   type,
   defaultValue,
   value,
@@ -39,7 +41,7 @@ const FormField: React.FC<FormInput> = ({
   }, []);
 
   return (
-    <FormItem name={name} hidden={type === 'hidden'}>
+    <FormItem hidden={type === 'hidden'} {...{ name, title }}>
       <Input
         id={name}
         {...{ name, type, defaultValue, value, placeholder }}

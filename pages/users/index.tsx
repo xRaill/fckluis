@@ -64,7 +64,13 @@ const Users: React.FC = () => {
   });
 
   const handleRoleChange = (row) => {
-    if (confirm(`Are you sure you want to make ${row.email} an admin?`)) {
+    if (
+      confirm(
+        `Are you sure you want to make ${row.email} an ${
+          row.admin ? 'normal user' : 'admin'
+        }?`
+      )
+    ) {
       sumbitRoleChange({ id: row.id, admin: !row.admin });
     }
   };

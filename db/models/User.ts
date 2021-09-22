@@ -47,7 +47,6 @@ export class User extends Model {
   @Column(DataType.STRING)
   signup_token: string;
 
-  @AllowNull(false)
   @Column(DataType.BOOLEAN)
   admin: boolean;
 

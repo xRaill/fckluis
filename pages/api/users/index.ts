@@ -13,6 +13,7 @@ const Users = ApiHandler(async (req, res) => {
 
   const users = await User.findAll({
     attributes: ['id', 'email'],
+    order: [['created_at', 'asc']],
   });
 
   return res.json({

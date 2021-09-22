@@ -9,7 +9,7 @@ const Users = ApiHandler(async (req, res) => {
 
   const loggedIn = validateAccessToken(accessToken);
 
-  if (!loggedIn) formError('base', 'Not authorized');
+  if (!loggedIn || !loggedIn.admin) formError('base', 'Not authorized');
 
   const users = await User.findAll({
     attributes: ['id', 'email', 'admin'],

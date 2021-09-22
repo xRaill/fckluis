@@ -8,11 +8,13 @@ import FormButton from 'components/Form/FormButton';
 import Loading from 'components/Loading';
 
 const NewUser: React.FC = () => {
-  const { loggedIn, authenticate } = useSession();
+  const { loggedIn, authenticate, admin } = useSession();
   const { push } = useRouter();
   const toast = useToast();
 
-  authenticate();
+  authenticate(() => {
+    if (!admin) push('/');
+  });
 
   const handleSuccess = async (body) => {
     if (body.success) {

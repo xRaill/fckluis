@@ -13,6 +13,7 @@ import {
 import useApi from 'hooks/useApi';
 import { useState } from 'react';
 import useToast from 'hooks/useToast';
+import { useRouter } from 'next/router';
 
 const Container = styled.div`
   display: flex;
@@ -43,7 +44,7 @@ const ActionButton = styled.a`
 `;
 
 const Users: React.FC = () => {
-  const { loggedIn, authenticate } = useSession();
+  const { loggedIn, authenticate, admin } = useSession();
   const { submit, callback } = useApi('users', 'GET');
   const { submit: sumbitRoleChange, callback: callbackRoleChange } = useApi(
     'users/change_role',
@@ -51,8 +52,12 @@ const Users: React.FC = () => {
   );
   const [data, setData] = useState([]);
   const toast = useToast();
+  const { push } = useRouter();
 
-  authenticate(() => submit());
+  authenticate(() => {
+    if (admin) submit();
+    else push('/');
+  });
 
   callback(async (data) => {
     const body = await data.json();

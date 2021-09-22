@@ -8,12 +8,13 @@ type Session = () => {
   accessToken: string;
   initialized: boolean;
   authenticate: (fn?: (loggedIn?: boolean) => void) => void;
+  admin: boolean;
 };
 
 let api = true;
 
 const useSession: Session = () => {
-  const { loggedIn, accessToken, initialized } = useAppSelector(
+  const { loggedIn, accessToken, initialized, admin } = useAppSelector(
     (state) => state.session
   );
   const dispatch = useAppDispatch();
@@ -30,6 +31,7 @@ const useSession: Session = () => {
               initialized: true,
               loggedIn: body.success,
               accessToken: body.access_token,
+              admin: body.admin,
             })
           );
         })
@@ -46,7 +48,7 @@ const useSession: Session = () => {
     }, [initialized]);
   };
 
-  return { loggedIn, accessToken, initialized, authenticate };
+  return { loggedIn, accessToken, initialized, authenticate, admin };
 };
 
 export default useSession;

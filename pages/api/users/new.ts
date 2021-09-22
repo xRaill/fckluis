@@ -12,7 +12,7 @@ const NewUser = ApiHandler(async (req, res) => {
 
   const loggedIn = validateAccessToken(accessToken);
 
-  if (!loggedIn) formError('base', 'Not authorized');
+  if (!loggedIn || !loggedIn.admin) formError('base', 'Not authorized');
 
   const { email } = <Record<string, string>>JSON.parse(req.body);
 

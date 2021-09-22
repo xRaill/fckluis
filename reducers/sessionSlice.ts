@@ -4,6 +4,7 @@ interface initialState {
   initialized: boolean;
   loggedIn: boolean;
   accessToken: string;
+  admin: boolean;
 }
 
 export const sessionSlice = createSlice({
@@ -12,6 +13,7 @@ export const sessionSlice = createSlice({
     initialized: false,
     loggedIn: undefined,
     accessToken: '',
+    admin: undefined,
   },
   reducers: {
     update: (state, action: PayloadAction<Partial<initialState>>) => {

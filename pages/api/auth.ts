@@ -18,7 +18,11 @@ const Auth = ApiHandler(async (req, res) => {
     formError('base', 'Session expired');
   }
 
-  return res.json({ success: true, access_token });
+  return res.json({
+    success: true,
+    access_token,
+    admin: (await session.$get('user')).get('admin'),
+  });
 });
 
 export default Auth;

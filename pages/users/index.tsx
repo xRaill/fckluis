@@ -50,6 +50,10 @@ const Users: React.FC = () => {
     'users/change_role',
     'POST'
   );
+  const { submit: submitRemoveUser, callback: callbackRemoveUser } = useApi(
+    'users/remove',
+    'POST'
+  );
   const [data, setData] = useState([]);
   const toast = useToast();
   const { push } = useRouter();
@@ -98,11 +102,29 @@ const Users: React.FC = () => {
     [loggedIn]
   );
 
-  const handleRemoveUser = () => {
-    if (confirm('Are you sure you want to remove this user?')) {
-      // remove user api call
+  const handleRemoveUser = (row) => {
+    if (confirm(`Are you sure you want to remove ${row.email}?`)) {
+      submitRemoveUser({ id: row.id });
     }
   };
+
+  callbackRemoveUser(
+    async (data) => {
+      const body = await data.json();
+      if (body.success) {
+        toast({ type: 'success', message: 'User removed!' });
+        submit();
+      } else {
+        const error = body.errors.find((err) => err.field == 'toast');
+        if (error) {
+          toast({ type: 'danger', message: error.message });
+        } else {
+          toast({ type: 'danger', message: 'Something went wrong!' });
+        }
+      }
+    },
+    [loggedIn]
+  );
 
   return (
     <Layout>
@@ -125,7 +147,7 @@ const Users: React.FC = () => {
                     size={'lg'}
                   />
                 </ActionButton>
-                <ActionButton onClick={handleRemoveUser}>
+                <ActionButton onClick={() => handleRemoveUser(row)}>
                   <FontAwesomeIcon icon={faUserTimes} size={'lg'} />
                 </ActionButton>
               </div>,

@@ -23,15 +23,22 @@ const Label = styled.label<{ inline?: boolean }>`
 
 interface FormItem {
   name?: string;
+  title?: string;
   inline?: boolean;
   hidden?: boolean;
 }
 
-const FormItem: React.FC<FormItem> = ({ name, inline, hidden, children }) => (
+const FormItem: React.FC<FormItem> = ({
+  name,
+  title,
+  inline,
+  hidden,
+  children,
+}) => (
   <InputItem {...{ inline, hidden }}>
     {!hidden && name && (
       <Label htmlFor={name} inline={inline}>
-        {name[0].toUpperCase() + name.slice(1)}
+        {(title || name)[0].toUpperCase() + (title || name).slice(1)}
       </Label>
     )}
     {children}

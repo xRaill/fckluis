@@ -16,7 +16,14 @@ const Logout: React.FC = () => {
   callback(async (res) => {
     const body = await res.json();
     if (body.success) {
-      dispatch(update({ loggedIn: false, accessToken: '', initialize: false }));
+      dispatch(
+        update({
+          loggedIn: false,
+          accessToken: '',
+          initialize: false,
+          admin: false,
+        })
+      );
       push('/');
       toast({ type: 'success', message: 'Logged out!' });
     }

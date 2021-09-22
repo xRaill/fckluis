@@ -75,6 +75,12 @@ const MenuItems = [
     loggedIn: true,
   },
   {
+    href: '/users',
+    name: 'Users',
+    loggedIn: true,
+    admin: true,
+  },
+  {
     href: '/logout',
     name: 'Logout',
     loggedIn: true,
@@ -87,7 +93,7 @@ interface Navbar {
 
 const Navbar: React.FC<Navbar> = ({ visible }) => {
   const [menu, setMenu] = useState(false);
-  const { loggedIn } = useSession();
+  const { loggedIn, admin } = useSession();
 
   return (
     <>
@@ -98,7 +104,8 @@ const Navbar: React.FC<Navbar> = ({ visible }) => {
         {MenuItems.map(
           (item, i) =>
             (item.loggedIn === loggedIn ||
-              typeof item.loggedIn === 'undefined') && (
+              typeof item.loggedIn === 'undefined') &&
+            (item.admin == admin || typeof item.admin === 'undefined') && (
               <Link key={i} href={item.href} passHref>
                 <NavItem left={item.left} onClick={() => setMenu(false)}>
                   {item.name}

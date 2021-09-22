@@ -37,7 +37,7 @@ const NewProject: React.FC = () => {
           <FormFileUpload
             name={'file'}
             accept={
-              'application/zip,application/x-zip-compressed,multipart/x-zip'
+              'application/zip,application/x-zip-compressed,multipart/x-zip,application/x-rar-compressed,application/octet-stream'
             }
           />
           <FormLabels name={'labels'} />

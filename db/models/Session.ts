@@ -15,6 +15,8 @@ import { v4 } from 'uuid';
 import '../';
 import { User } from './User';
 
+const { ACCESS_SECRET } = process.env;
+
 @Table
 export class Session extends Model {
   @PrimaryKey
@@ -44,7 +46,7 @@ export class Session extends Model {
     return Date.now() + this.get('active_for') < this.get('updated_at');
   }
 
-  generateToken(): string | boolean {
+  async generateToken(): Promise<string | boolean> {
     if (this.valid()) return false;
 
     this.changed('updatedAt', true);
@@ -52,8 +54,12 @@ export class Session extends Model {
     this.save();
 
     return sign(
-      { user_id: this.get('user_id'), exp: Date.now() + 1000 * 60 * 30 },
-      process.env.ACCESS_SECRET
+      {
+        admin: (await this.$get('user')).get('admin'),
+        user_id: this.get('user_id'),
+        exp: Date.now() + 1000 * 60 * 30,
+      },
+      ACCESS_SECRET
     );
   }
 }

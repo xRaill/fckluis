@@ -35,7 +35,7 @@ const Login = ApiHandler(async (req, res) => {
   });
 
   const new_sid = session.get('token');
-  const access_token = session.generateToken();
+  const access_token = await session.generateToken();
 
   res.setHeader(
     'Set-Cookie',

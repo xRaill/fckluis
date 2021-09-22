@@ -13,6 +13,10 @@ export const theme: DefaultTheme = {
     background: '#fff',
     purple: '#71265E',
     lightpurple: '#A03585',
+    red: '#8c0000',
+    lightred: '#bd2000',
+    green: '#088610',
+    lightgreen: '#0aa814',
   },
 };
 

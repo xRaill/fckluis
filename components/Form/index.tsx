@@ -5,12 +5,13 @@ import { useAppDispatch, useAppSelector } from 'utils/store';
 import FormError from './FormError';
 
 interface Form {
+  path: string;
   onSuccess?: (res: Record<string, unknown>) => void;
 }
 
-const Form: React.FC<Form> = ({ onSuccess, children }) => {
+const Form: React.FC<Form> = ({ path, onSuccess, children }) => {
   const { active, data } = useAppSelector((state) => state.form);
-  const { submit, callback } = useApi('login');
+  const { submit, callback } = useApi(path, 'POST');
   const dispatch = useAppDispatch();
 
   useEffect(() => {

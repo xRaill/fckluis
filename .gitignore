@@ -29,3 +29,6 @@ yarn-error.log*
 
 # database
 *.sqlite
+
+# user generated content
+/public/uploads

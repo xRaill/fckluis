@@ -33,7 +33,7 @@ const Home: React.FC = () => {
   return (
     <Layout>
       {!loggedIn && (
-        <Form onSuccess={handleSuccess}>
+        <Form path={'login'} onSuccess={handleSuccess}>
           <FormField name={'email'} placeholder={'email@example.com'} />
           <FormField
             name={'password'}

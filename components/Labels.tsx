@@ -1,9 +1,11 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useApi from 'hooks/useApi';
 import {
   ChangeEventHandler,
   FocusEventHandler,
   KeyboardEventHandler,
+  useEffect,
   useState,
 } from 'react';
 import styled from 'styled-components';
@@ -71,6 +73,7 @@ const AddLabel = styled.span<{ active: boolean }>`
     position: absolute;
     background-color: #fff;
     border: 1px solid gray;
+    z-index: 1;
     & span {
       display: block;
       width: 110px;
@@ -90,24 +93,38 @@ interface Labels {
   activeLabels?: string[];
   allLabels?: string[];
   editable?: boolean;
+  addable?: boolean;
+  onChange?: (labels: string[]) => void;
 }
 
 const Labels: React.FC<Labels> = ({
+  addable,
   editable,
   activeLabels = [],
-  allLabels = [],
+  onChange,
 }) => {
+  const { callback, submit } = useApi('labels', 'GET');
+  const [allLabels, setAllLabels] = useState([]);
   const [labels, setLabels] = useState(activeLabels);
   const [dropdown, setDropdown] = useState(false);
   const [index, setIndex] = useState(0);
   const [term, setTerm] = useState('');
+
+  callback(async (res) => {
+    const body = await res.json();
+    setAllLabels(body.labels);
+  });
+
+  useEffect(() => {
+    if (editable) submit();
+  }, []);
 
   const removeLabel = (name: string) =>
     setLabels(labels.filter((v) => v !== name));
 
   const addLabel = (name: string) => {
     if (!name) return;
-    setLabels(labels.concat(name));
+    if (!labels.includes(name)) setLabels(labels.concat(name));
     setTerm('');
     setIndex(0);
   };
@@ -123,7 +140,7 @@ const Labels: React.FC<Labels> = ({
   const handleKeyPress: KeyboardEventHandler<HTMLInputElement> = (e) => {
     switch (e.key) {
       case 'Enter':
-        addLabel(filteredLabels()[index]);
+        addLabel(addable && term ? term : filteredLabels()[index]);
         break;
       case 'ArrowDown':
         index < filteredLabels().length - 1 && setIndex(index + 1);
@@ -139,9 +156,13 @@ const Labels: React.FC<Labels> = ({
     document.getElementById('label-search').focus();
   };
 
+  useEffect(() => {
+    onChange && onChange(labels);
+  }, [labels]);
+
   return (
     <LabelsContainer>
-      {labels.map((label, i) => (
+      {(editable ? labels : activeLabels).map((label, i) => (
         <LabelWrapper key={i}>
           <LabelText single={!editable} data-testid={'label'}>
             {label}
@@ -153,13 +174,14 @@ const Labels: React.FC<Labels> = ({
           )}
         </LabelWrapper>
       ))}
-      {editable &&
+      {editable && (
         <AddLabel
           active={dropdown}
           onFocus={handleFocus}
           tabIndex={0}
           onBlur={() => {
             setDropdown(false);
+            if (addable) addLabel(term);
             setTerm('');
           }}
         >
@@ -181,7 +203,7 @@ const Labels: React.FC<Labels> = ({
             ))}
           </div>
         </AddLabel>
-      }
+      )}
     </LabelsContainer>
   );
 };

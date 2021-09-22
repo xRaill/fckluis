@@ -6,6 +6,7 @@ export const Error = styled.div<{ active: boolean }>`
   transition: color 0.5s, height 0.5s;
   height: 0;
   color: transparent;
+  text-align: center;
   ${({ active }) =>
     active && {
       color: 'red',

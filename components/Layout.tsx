@@ -29,14 +29,13 @@ const Body = styled.div<{ transition?: boolean }>`
 `;
 
 const ScrollBar = styled(SimpleBar)`
-  height: 94vh;
+  height: calc(100vh - 3.1em);
+  @media (max-width: 767px) {
+    height: 100vh;
+  }
 `;
 
-interface Layout {
-  children: React.ReactNode;
-}
-
-const Layout: React.FC<Layout> = ({ children }) => {
+const Layout: React.FC = ({ children }) => {
   const { initialized } = useSession();
   const [expanded, setExpanded] = useState(!initialized);
   const { TransitionComponent, state } = usePageTransition(children);

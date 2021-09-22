@@ -11,7 +11,7 @@ const Auth = ApiHandler(async (req, res) => {
 
   if (!session) formError('base', 'Not authenticated', 401);
 
-  const access_token = session.generateToken();
+  const access_token = await session.generateToken();
 
   if (!access_token) {
     res.setHeader('Set-Cookie', serialize('sid', '', { expires: new Date() }));

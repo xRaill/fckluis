@@ -12,7 +12,7 @@ const Users = ApiHandler(async (req, res) => {
   if (!loggedIn) formError('base', 'Not authorized');
 
   const users = await User.findAll({
-    attributes: ['id', 'email'],
+    attributes: ['id', 'email', 'admin'],
     order: [['created_at', 'asc']],
   });
 

@@ -45,6 +45,10 @@ const ActionButton = styled.a`
 const Users: React.FC = () => {
   const { loggedIn, authenticate } = useSession();
   const { submit, callback } = useApi('users', 'GET');
+  const { submit: sumbitRoleChange, callback: callbackRoleChange } = useApi(
+    'users/change_role',
+    'POST'
+  );
   const [data, setData] = useState([]);
   const toast = useToast();
 
@@ -59,11 +63,29 @@ const Users: React.FC = () => {
     }
   });
 
-  const handleRoleChange = () => {
-    if (confirm('Are you sure you want to make this person an admin?')) {
-      // change role api call
+  const handleRoleChange = (row) => {
+    if (confirm(`Are you sure you want to make ${row.email} an admin?`)) {
+      sumbitRoleChange({ id: row.id, admin: !row.admin });
     }
   };
+
+  callbackRoleChange(
+    async (data) => {
+      const body = await data.json();
+      if (body.success) {
+        toast({ type: 'success', message: 'User role updated!' });
+        submit();
+      } else {
+        const error = body.errors.find((err) => err.field == 'toast');
+        if (error) {
+          toast({ type: 'danger', message: error.message });
+        } else {
+          toast({ type: 'danger', message: 'Something went wrong!' });
+        }
+      }
+    },
+    [loggedIn]
+  );
 
   const handleRemoveUser = () => {
     if (confirm('Are you sure you want to remove this user?')) {
@@ -80,13 +102,13 @@ const Users: React.FC = () => {
               <LinkButton>Add user</LinkButton>
             </Link>
           </div>
-          <Table headers={['#', 'email', 'role', 'actions']} data={data}>
+          <Table headers={['#', 'Email', 'Role', 'Actions']} data={data}>
             {(row) => [
               row.id,
               row.email,
-              row.admin ? 'Admin' : 'user',
+              row.admin ? 'Admin' : 'User',
               <div>
-                <ActionButton onClick={handleRoleChange}>
+                <ActionButton onClick={() => handleRoleChange(row)}>
                   <FontAwesomeIcon
                     icon={row.admin ? faAngleDoubleDown : faAngleDoubleUp}
                     size={'lg'}

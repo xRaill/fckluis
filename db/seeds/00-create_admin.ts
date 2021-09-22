@@ -7,6 +7,7 @@ export const up: Seeds = async ({ context: sequelize }) => {
       id: 1,
       email: 'admin@kluis.fc.school',
       hashed_password: await hash('testen'),
+      admin: true,
       created_at: new Date(),
       updated_at: new Date(),
     },

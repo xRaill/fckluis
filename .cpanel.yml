@@ -1,8 +1,8 @@
 ---
 deployment:
   tasks:
-    - yarn install
-    - yarn build
-    - yarn migrate up
-    = yarn seed up
-    - yarn pm2 restart next >> /dev/null || yarn pm2 start 'yarn start -p 23679' --name next
+    - npm install
+    - npm build
+    - npm migrate up
+    - npm seed up
+    - touch /home/railly/fckluis/tmp/restart.txt

@@ -1,7 +1,6 @@
 ---
 deployment:
   tasks:
-    - cp .htaccess ~/www/.htaccess
     - yarn install
     - yarn build
     - yarn migrate up

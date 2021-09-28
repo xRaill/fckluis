@@ -1,2 +1,0 @@
-RewriteEngine on
-RewriteRule (^(?!.*(index.|efault.|home.)).*) http://localhost:23679/$1 [P,L]

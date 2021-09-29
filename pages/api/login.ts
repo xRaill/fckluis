@@ -45,6 +45,7 @@ const Login = ApiHandler(async (req, res) => {
         new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: true,
       path: '/api/auth',
+      sameSite: true,
     })
   );
 

@@ -4,7 +4,7 @@ import FormItem from './FormItem';
 import { useAppDispatch } from 'utils/store';
 import { updateData } from 'reducers/formSlice';
 
-const Input = styled.div<{ checked: boolean }>`
+const Input = styled.label<{ checked: boolean }>`
   height: 20px;
   width: 20px;
   border: ${({ theme }) => `1px solid ${theme.colors.purple}`};
@@ -27,10 +27,11 @@ const Input = styled.div<{ checked: boolean }>`
 
 interface FormCheckbox {
   name: string;
+  title?: string;
   checked?: boolean;
 }
 
-const FormCheckbox: React.FC<FormCheckbox> = ({ name, checked }) => {
+const FormCheckbox: React.FC<FormCheckbox> = ({ name, title, checked }) => {
   const dispatch = useAppDispatch();
   const [active, setActive] = useState(checked || false);
 
@@ -39,7 +40,12 @@ const FormCheckbox: React.FC<FormCheckbox> = ({ name, checked }) => {
   }, [active]);
 
   return (
-    <FormItem name={name} inline>
+    <FormItem
+      name={name}
+      title={title}
+      onClick={() => setActive(!active)}
+      inline
+    >
       <Input
         checked={active}
         tabIndex={0}

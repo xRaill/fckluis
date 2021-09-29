@@ -8,6 +8,7 @@ import FormButton from 'components/Form/FormButton';
 import { useEffect } from 'react';
 import { update } from 'reducers/sessionSlice';
 import { useAppDispatch } from 'utils/store';
+import FormCheckbox from 'components/Form/FormCheckbox';
 
 const Home: React.FC = () => {
   const { loggedIn } = useSession();
@@ -41,6 +42,7 @@ const Home: React.FC = () => {
             type={'password'}
             placeholder={'******'}
           />
+          <FormCheckbox title={'Remember me'} name={'remember_me'} />
           <FormButton>Login</FormButton>
         </Form>
       )}

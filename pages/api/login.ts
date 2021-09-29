@@ -41,8 +41,7 @@ const Login = ApiHandler(async (req, res) => {
     'Set-Cookie',
     serialize('sid', new_sid, {
       expires:
-        remember_me &&
-        new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        remember_me && new Date(new Date().setMonth(new Date().getMonth() + 2)), // Keep user logged in for 2 months
       httpOnly: true,
       path: '/api/auth',
       sameSite: true,

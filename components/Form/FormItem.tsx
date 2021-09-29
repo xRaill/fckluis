@@ -26,6 +26,7 @@ interface FormItem {
   title?: string;
   inline?: boolean;
   hidden?: boolean;
+  onClick?: VoidFunction;
 }
 
 const FormItem: React.FC<FormItem> = ({
@@ -33,9 +34,10 @@ const FormItem: React.FC<FormItem> = ({
   title,
   inline,
   hidden,
+  onClick,
   children,
 }) => (
-  <InputItem {...{ inline, hidden }}>
+  <InputItem {...{ inline, hidden }} onClick={onClick}>
     {!hidden && name && (
       <Label htmlFor={name} inline={inline}>
         {(title || name)[0].toUpperCase() + (title || name).slice(1)}

@@ -1,8 +1,8 @@
 ---
 deployment:
   tasks:
-    - npm install
-    - npm build
-    - npm migrate up
-    - npm seed up
-    - touch /home/railly/fckluis/tmp/restart.txt
+    - yarn install
+    - yarn build
+    - yarn migrate up
+    - yarn seed up
+    - mkdir /home/railly/fckluis/tmp && touch /home/railly/fckluis/tmp/restart.txt

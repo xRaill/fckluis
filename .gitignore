@@ -32,3 +32,6 @@ yarn-error.log*
 
 # user generated content
 /public/uploads
+
+#prod
+/tmp

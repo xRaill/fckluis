@@ -24,6 +24,7 @@ const Home: React.FC = () => {
       update({
         loggedIn: true,
         accessToken: body.access_token,
+        admin: body.admin,
       })
     );
     push('/');

@@ -48,7 +48,11 @@ const Login = ApiHandler(async (req, res) => {
     })
   );
 
-  return res.json({ success: true, access_token });
+  return res.json({
+    success: true,
+    access_token,
+    admin: user.get('admin'),
+  });
 });
 
 export default Login;

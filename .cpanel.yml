@@ -2,6 +2,7 @@
 deployment:
   tasks:
     - yarn install
+    - npm_config_build_from_source=true yarn add argon2@0.27.2
     - yarn build
     - yarn migrate up
     - yarn seed up

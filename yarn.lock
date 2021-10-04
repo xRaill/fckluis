@@ -2229,7 +2229,7 @@ bluebird@^3.5.5:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
 
-blueimp-canvas-to-blob@^3.29.0:
+blueimp-canvas-to-blob@^3.28.0:
   version "3.29.0"
   resolved "https://registry.yarnpkg.com/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.29.0.tgz#d965f06cb1a67fdae207a2be56683f55ef531466"
   integrity sha512-0pcSSGxC0QxT+yVkivxIqW0Y4VlO2XSDPofBAqoJ1qJxgH9eiUDLv50Rixij2cDuEfx4M6DpD9UGZpRhT5Q8qg==
@@ -2803,12 +2803,12 @@ compose-function@3.0.3:
   dependencies:
     arity-n "^1.0.4"
 
-compressorjs@^1.0.7:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.1.0.tgz#cde5ee6b49f8199fd211435100c79f45a5640b35"
-  integrity sha512-73W5hc+rtFeWmE4Sm03J+bsO8nIj1OT4Hgd4y/x+oYftm5/2vnkdpE6WXLX6Ce72LL+vV9Tf7Gg/i6aPw2utbw==
+compressorjs@1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/compressorjs/-/compressorjs-1.0.7.tgz#67cd0b3b9ac97540515b22b334dc32eb92b730b1"
+  integrity sha512-ca+H8CGrn0LG103//VQmXBbNdvzvHiW26LGdWncp4RmLNbNQjaaFWIUxMN9++hbhGobLtofkHoxzzXGisNyD3w==
   dependencies:
-    blueimp-canvas-to-blob "^3.29.0"
+    blueimp-canvas-to-blob "^3.28.0"
     is-blob "^2.1.0"
 
 concat-map@0.0.1:

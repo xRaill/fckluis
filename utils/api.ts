@@ -54,12 +54,12 @@ export class formErrorCollection {
   }
 }
 
-type validateAccessToken = (accessToken: string) => ReturnType<typeof verify>;
+type validateAccessToken = (accessToken: string) => any | boolean;
 
 export const validateAccessToken: validateAccessToken = (accessToken) => {
   if (!accessToken) return false;
   try {
-    return verify(accessToken, ACCESS_SECRET);
+    return verify(accessToken, ACCESS_SECRET) as any;
   } catch {
     return false;
   }

@@ -15,7 +15,9 @@ const Form: React.FC<Form> = ({ path, onSuccess, children }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    return () => dispatch(reset());
+    return () => {
+      dispatch(reset());
+    };
   }, []);
 
   callback(async (res) => {

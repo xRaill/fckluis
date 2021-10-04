@@ -18,9 +18,9 @@ const Projects = ApiHandler(async (req, res) => {
 
   if (!project) formError('base', 'Project not found');
 
-  const labels = await (await project.$get('labels')).map(
-    (a) => (a.toJSON() as Label).name
-  );
+  const labels = await (
+    await project.$get('labels')
+  ).map((a) => (a.toJSON() as Label).name);
 
   return res.json({
     success: true,

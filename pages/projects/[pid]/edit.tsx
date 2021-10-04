@@ -89,7 +89,7 @@ const EditProject: React.FC = () => {
           <FormLabels
             name={'labels'}
             title={'tags'}
-            activeLabels={(project.labels as unknown) as string[]}
+            activeLabels={project.labels as unknown as string[]}
           />
           <FormCheckbox name={'public'} checked={project.public} />
           <FormItem inline>

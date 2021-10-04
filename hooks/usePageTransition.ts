@@ -7,9 +7,10 @@ const PageTransitionContext = createContext({
   },
 });
 
-type usePage = (
-  children: React.ReactNode
-) => { TransitionComponent: React.ReactNode; state: number };
+type usePage = (children: React.ReactNode) => {
+  TransitionComponent: React.ReactNode;
+  state: number;
+};
 
 const usePageTransition: usePage = (children) => {
   const page = useContext(PageTransitionContext);

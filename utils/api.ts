@@ -54,7 +54,7 @@ export class formErrorCollection {
   }
 }
 
-type validateAccessToken = (accessToken: string) => any;
+type validateAccessToken = (accessToken: string) => ReturnType<typeof verify>;
 
 export const validateAccessToken: validateAccessToken = (accessToken) => {
   if (!accessToken) return false;

@@ -60,7 +60,6 @@ jobs:
       - name: setup enviorment
         run: |
           yarn install
-        # Rebuild argon from source because prod server contains old binaries
           npm_config_build_from_source=true yarn add argon2@0.27.2
           yarn build
           yarn migrate up

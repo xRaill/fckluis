@@ -40,7 +40,7 @@ const NewProject: React.FC = () => {
               'application/zip,application/x-zip-compressed,multipart/x-zip,application/x-rar-compressed,application/octet-stream'
             }
           />
-          <FormLabels name={'labels'} />
+          <FormLabels title={'tags'} name={'labels'} />
           <FormCheckbox name={'public'} />
           <FormItem inline>
             <FormButton>Create</FormButton>

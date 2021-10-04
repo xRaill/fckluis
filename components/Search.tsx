@@ -56,7 +56,7 @@ const Dropdown = styled.label`
     display: flex;
     flex-direction: row-reverse;
     align-self: center;
-    width: 75px;
+    padding-left: 56px;
     font-size: 0.7em;
     position: absolute;
     pointer-events: none;
@@ -113,7 +113,7 @@ const Search: React.FC<Search> = ({ active, setSearch }) => {
         />
         <Input
           id={'search'}
-          placeholder={'Projecten zoeken...'}
+          placeholder={'Search projects...'}
           onChange={handleInputChange}
         />
         <Dropdown htmlFor={'dropdown'}>
@@ -122,8 +122,8 @@ const Search: React.FC<Search> = ({ active, setSearch }) => {
             defaultValue={order}
             onChange={handleSelectChange}
           >
-            <option value={'desc'}>Nieuwste</option>
-            <option value={'asc'}>Oudste</option>
+            <option value={'desc'}>Newest</option>
+            <option value={'asc'}>Oldest</option>
           </select>
         </Dropdown>
       </SearchWrapper>

@@ -235,20 +235,20 @@ const Modal: React.FC<Modal> = ({
     </div>
     <div className={'hide-on-active'}>{title}</div>
     <div className={'row'}>
-      <div className={'label'}>Titel</div>
+      <div className={'label'}>Title</div>
       <div className={'title'}>{title}</div>
     </div>
     <div className={'row'}>
-      <div className={'label'}>Beschrijving</div>
+      <div className={'label'}>Description</div>
       <div className={'description'}>{description}</div>
     </div>
     <div className={'row'}>
-      <div className={'label'}>Gemaakt door</div>
+      <div className={'label'}>Created by</div>
       <div className={'author'}>{author}</div>
     </div>
     {!!labels.length && (
       <div className={'row'}>
-        <div className={'label'}>Labels</div>
+        <div className={'label'}>Tags</div>
         <div className={'labels'}>
           <Labels activeLabels={labels} />
         </div>

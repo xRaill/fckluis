@@ -187,7 +187,7 @@ const Labels: React.FC<Labels> = ({
         >
           <input
             id={'label-search'}
-            placeholder={'Label toevoegen'}
+            placeholder={!dropdown && 'Add search tag'}
             value={term}
             onChange={handleSearch}
             onKeyDown={handleKeyPress}

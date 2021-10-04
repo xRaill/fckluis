@@ -1,5 +1,5 @@
 import { createTransport } from 'nodemailer';
-const { PRODUCTION, MAIL_HOST, MAIL_PORT } = process.env;
+const { PRODUCTION, MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASS } = process.env;
 
 const transporter = createTransport({
   host: MAIL_HOST,
@@ -7,6 +7,10 @@ const transporter = createTransport({
   secure: !!PRODUCTION,
   tls: {
     rejectUnauthorized: !!PRODUCTION,
+  },
+  auth: {
+    user: MAIL_USER,
+    pass: MAIL_PASS,
   },
 });
 

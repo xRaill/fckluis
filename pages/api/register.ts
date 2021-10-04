@@ -16,7 +16,9 @@ const Register = ApiHandler(async (req, res) => {
   if (!validator.isUUID(token)) errors.add('base', 'Invalid token given!');
   errors.resolve();
 
-  const user = await User.findOne({ where: { signup_token: token } });
+  const user = await User.findOne({
+    where: { user_token: token, hashed_password: null },
+  });
 
   if (!user || user.get('hashed_password') !== null)
     formError('base', 'Could not create account!');
@@ -24,7 +26,7 @@ const Register = ApiHandler(async (req, res) => {
   user.set({
     password,
     password_verify,
-    signup_token: null,
+    user_token: null,
   });
 
   if (user.verifyPasswordMatch())

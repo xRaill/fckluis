@@ -45,7 +45,7 @@ export class User extends Model {
   password_verify: string;
 
   @Column(DataType.STRING)
-  signup_token: string;
+  user_token: string;
 
   @Column(DataType.BOOLEAN)
   admin: boolean;

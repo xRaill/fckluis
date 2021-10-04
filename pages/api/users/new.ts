@@ -25,7 +25,7 @@ const NewUser = ApiHandler(async (req, res) => {
   if (user) formError('email', 'User with this email already exists');
 
   const newUser = await User.create({
-    signup_token: v4(),
+    user_token: v4(),
     email,
   });
 
@@ -34,10 +34,10 @@ const NewUser = ApiHandler(async (req, res) => {
     to: newUser.get('email'),
     subject: 'Uitnodiging voor FC Kluis!',
     text: `You received a request to create an account on FC Kluis! http://localhost:3000/register?token=${newUser.get(
-      'signup_token'
+      'user_token'
     )}'`,
     html: `You received a request to create an account on FC Kluis! <br><br> <a href="http://localhost:3000/register?token=${newUser.get(
-      'signup_token'
+      'user_token'
     )}">Click here to sign up!</a>`,
   });
 

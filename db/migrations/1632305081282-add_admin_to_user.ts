@@ -5,7 +5,6 @@ export const up: Migrations = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().addColumn('users', 'admin', {
     type: DataType.BOOLEAN,
     defaultValue: false,
-    allowNull: false,
   });
 };
 

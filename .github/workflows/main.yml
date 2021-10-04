@@ -56,3 +56,15 @@ jobs:
           ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
           git remote add production ${{ secrets.PRODUCTION_REPOSITORY }}
           git push production main
+
+      - name: setup enviorment
+        run: |
+          yarn install
+        # Rebuild argon from source because prod server contains old binaries
+          npm_config_build_from_source=true yarn add argon2@0.27.2
+          yarn build
+          yarn migrate up
+          yarn seed up
+      
+      - name: restart server
+        run: mkdir /home/railly/fckluis/tmp && touch /home/railly/fckluis/tmp/restart.txt

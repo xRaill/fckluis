@@ -32,7 +32,7 @@ const NewUser = ApiHandler(async (req, res) => {
   nodemailer.sendMail({
     from: 'FC Kluis <info@kluis.fc.school>',
     to: newUser.get('email'),
-    subject: 'Uitnodiging voor FC Kluis!',
+    subject: 'Invitation to join FC Kluis!',
     text: `You received a request to create an account on FC Kluis! http://localhost:3000/register?token=${newUser.get(
       'user_token'
     )}'`,

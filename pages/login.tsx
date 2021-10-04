@@ -1,5 +1,6 @@
 import Layout from 'components/Layout';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import useToast from 'hooks/useToast';
 import useSession from 'hooks/useSession';
 import Form from 'components/Form';
@@ -44,6 +45,8 @@ const Home: React.FC = () => {
           />
           <FormCheckbox title={'Remember me'} name={'remember_me'} />
           <FormButton>Login</FormButton>
+          <br />
+          <Link href={'/password_forget'}>Forgot password?</Link>
         </Form>
       )}
     </Layout>

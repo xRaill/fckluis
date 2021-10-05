@@ -6,4 +6,4 @@ deployment:
     - yarn build
     - yarn migrate up
     - yarn seed up
-    - mkdir /home/railly/fckluis/tmp && touch /home/railly/fckluis/tmp/restart.txt
+    - mkdir /home/railly/fckluis/tmp -p && touch /home/railly/fckluis/tmp/restart.txt

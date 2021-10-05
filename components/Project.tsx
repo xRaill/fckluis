@@ -258,7 +258,9 @@ const Modal: React.FC<Modal> = ({
       <div className={'row'}>
         <div className={'label'}>URL</div>
         <div className={'url'}>
-          <a href={url} target={'_blank'}>{url}</a>
+          <a href={url} target={'_blank'}>
+            {url}
+          </a>
         </div>
       </div>
     )}

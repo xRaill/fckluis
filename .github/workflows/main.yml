@@ -36,34 +36,23 @@ jobs:
       - name: Build next.js
         run: yarn build
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: [ build ]
-  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-  #     - name: Connect to server
-  #       uses: webfactory/ssh-agent@v0.4.1
-  #       with:
-  #         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Connect to server
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-  #     - name: Push to server
-  #       run: |
-  #         ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
-  #         git remote add production ${{ secrets.PRODUCTION_REPOSITORY }}
-  #         git push production main
-
-  #     - name: setup enviorment
-  #       run: |
-  #         yarn install
-  #         npm_config_build_from_source=true yarn add argon2@0.27.2
-  #         yarn build
-  #         yarn migrate up
-  #         yarn seed up
-      
-  #     - name: restart server
-  #       run: mkdir /home/railly/fckluis/tmp && touch /home/railly/fckluis/tmp/restart.txt
+      - name: Push to server
+        run: |
+          ssh-keyscan -t rsa ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
+          git remote add production ${{ secrets.PRODUCTION_REPOSITORY }}
+          git push production main

@@ -1,4 +1,4 @@
-import { hash } from 'argon2';
+import { genSalt, hash } from 'bcryptjs';
 import { Seeds } from 'db/umzug';
 
 export const up: Seeds = async ({ context: sequelize }) => {
@@ -6,7 +6,7 @@ export const up: Seeds = async ({ context: sequelize }) => {
     {
       id: 1,
       email: 'admin@kluis.fc.school',
-      hashed_password: await hash('testen'),
+      hashed_password: await hash('testen', await genSalt(10)),
       admin: true,
       created_at: new Date(),
       updated_at: new Date(),

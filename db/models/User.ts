@@ -1,4 +1,4 @@
-import { hash, verify } from 'argon2';
+import { hash, compare, genSalt } from 'bcryptjs';
 import {
   AllowNull,
   AutoIncrement,
@@ -57,7 +57,10 @@ export class User extends Model {
   @BeforeCreate
   static async hashPassword(user: User): Promise<void> {
     if (user.get('password'))
-      user.set('hashed_password', await hash(user.get('password')));
+      user.set(
+        'hashed_password',
+        await hash(user.get('password'), await genSalt(10))
+      );
   }
 
   verifyPasswordMatch(): boolean {
@@ -67,6 +70,6 @@ export class User extends Model {
   }
 
   async validatePassword(password: string): Promise<boolean> {
-    return await verify(this.get('hashed_password'), password);
+    return await compare(password, this.get('hashed_password'));
   }
 }

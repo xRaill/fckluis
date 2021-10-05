@@ -2,6 +2,7 @@ import { ApiHandler, formError, validateAccessToken } from 'utils/api';
 import { Project } from 'db/models/Project';
 import { Label } from 'db/models/Label';
 import { Op, Sequelize } from 'sequelize';
+import 'core-js/modules/esnext.string.replace-all';
 
 const Projects = ApiHandler(async (req, res) => {
   if (!['GET'].includes(req.method))

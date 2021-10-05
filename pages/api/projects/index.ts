@@ -42,7 +42,7 @@ const Projects = ApiHandler(async (req, res) => {
             INNER JOIN project_labels pl ON l.id = pl.label_id
             WHERE l.name IN ('${labels.replaceAll(',', "', '")}')
             GROUP BY pl.project_id
-            HAVING COUNT(l.id) == ${labels.split(',').length}
+            HAVING COUNT(DISTINCT l.id) = ${labels.split(',').length}
         )`),
         },
       }

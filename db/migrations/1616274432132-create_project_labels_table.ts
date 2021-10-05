@@ -7,6 +7,7 @@ export const up: Migrations = async ({ context: sequelize }) => {
       primaryKey: true,
       type: DataType.INTEGER,
       allowNull: false,
+      autoIncrement: true,
     },
     project_id: {
       type: DataType.INTEGER,

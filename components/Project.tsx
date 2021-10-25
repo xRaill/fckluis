@@ -178,7 +178,6 @@ const ModalBody = styled.div<{ active: boolean }>`
     max-width: 100vw;
     overflow: hidden;
     background-color: lightgrey;
-    min-height: 29vh;
     display: flex;
     align-items: center;
     justify-content: center;

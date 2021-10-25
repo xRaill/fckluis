@@ -4,6 +4,8 @@ import nodemailer from 'utils/nodemailer';
 import { v4 } from 'uuid';
 import validator from 'validator';
 
+const { HOST } = process.env;
+
 const PasswordForget = ApiHandler(async (req, res) => {
   if (!['POST'].includes(req.method))
     formError('base', `Method ${req.method} not allowed`);
@@ -25,10 +27,10 @@ const PasswordForget = ApiHandler(async (req, res) => {
       from: 'FC Kluis <info@kluis.fc.school>',
       to: user.get('email'),
       subject: 'FC Kluis password forget!',
-      text: `You requested a new password! http://localhost:3000/change_password?token=${user.get(
+      text: `You requested a new password! ${HOST}/change_password?token=${user.get(
         'user_token'
       )}'`,
-      html: `You requested a new password! <br><br> <a href="http://localhost:3000/change_password?token=${user.get(
+      html: `You requested a new password! <br><br> <a href="${HOST}/change_password?token=${user.get(
         'user_token'
       )}">Click here to change it!</a>`,
     });

@@ -4,6 +4,8 @@ import validator from 'validator';
 import nodemailer from 'utils/nodemailer';
 import { v4 } from 'uuid';
 
+const { HOST } = process.env;
+
 const NewUser = ApiHandler(async (req, res) => {
   if (!['POST'].includes(req.method))
     formError('base', `Method ${req.method} not allowed`);
@@ -33,10 +35,10 @@ const NewUser = ApiHandler(async (req, res) => {
     from: 'FC Kluis <info@kluis.fc.school>',
     to: newUser.get('email'),
     subject: 'Invitation to join FC Kluis!',
-    text: `You received a request to create an account on FC Kluis! http://localhost:3000/register?token=${newUser.get(
+    text: `You received a request to create an account on FC Kluis! ${HOST}/register?token=${newUser.get(
       'user_token'
     )}'`,
-    html: `You received a request to create an account on FC Kluis! <br><br> <a href="http://localhost:3000/register?token=${newUser.get(
+    html: `You received a request to create an account on FC Kluis! <br><br> <a href="${HOST}/register?token=${newUser.get(
       'user_token'
     )}">Click here to sign up!</a>`,
   });

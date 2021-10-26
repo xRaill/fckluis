@@ -14,6 +14,7 @@ import useApi from 'hooks/useApi';
 import { useState } from 'react';
 import useToast from 'hooks/useToast';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 const Container = styled.div`
   display: flex;
@@ -128,6 +129,9 @@ const Users: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis - Users</title>
+      </Head>
       <Loading active={loggedIn && !!data.length}>
         <Container>
           <div>

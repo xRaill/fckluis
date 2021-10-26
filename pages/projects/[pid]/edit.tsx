@@ -15,6 +15,7 @@ import { Project } from 'db/models/Project';
 import FormItem from 'components/Form/FormItem';
 import FormImageUpload from 'components/Form/FormImageUpload';
 import FormFileUpload from 'components/Form/FormFileUpload';
+import Head from 'next/head';
 
 const EditProject: React.FC = () => {
   const {
@@ -66,7 +67,13 @@ const EditProject: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis - Edit project</title>
+      </Head>
       <Loading active={!!Object.values(project).length}>
+        <Head>
+          <title>Fc Kluis - Edit {project.title}</title>
+        </Head>
         <Form path={`projects/${pid}/update`} onSuccess={handleSuccess}>
           <FormImageUpload
             name={'thumbnail'}

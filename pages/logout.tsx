@@ -5,6 +5,7 @@ import useApi from 'hooks/useApi';
 import { useAppDispatch } from 'utils/store';
 import { update } from 'reducers/sessionSlice';
 import useSession from 'hooks/useSession';
+import Head from 'next/head';
 
 const Logout: React.FC = () => {
   const { submit, callback } = useApi('logout');
@@ -34,7 +35,13 @@ const Logout: React.FC = () => {
     else push('/');
   });
 
-  return <Layout>{}</Layout>;
+  return (
+    <Layout>
+      <Head>
+        <title>Fc Kluis - Logout</title>
+      </Head>
+    </Layout>
+  );
 };
 
 export default Logout;

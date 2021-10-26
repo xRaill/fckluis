@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { update } from 'reducers/sessionSlice';
 import { useAppDispatch } from 'utils/store';
 import FormCheckbox from 'components/Form/FormCheckbox';
+import Head from 'next/head';
 
 const Home: React.FC = () => {
   const { loggedIn } = useSession();
@@ -35,6 +36,9 @@ const Home: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis - Login</title>
+      </Head>
       {!loggedIn && (
         <Form path={'login'} onSuccess={handleSuccess}>
           <FormField name={'email'} placeholder={'email@example.com'} />

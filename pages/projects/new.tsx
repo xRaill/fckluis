@@ -12,6 +12,7 @@ import Loading from 'components/Loading';
 import FormItem from 'components/Form/FormItem';
 import FormImageUpload from 'components/Form/FormImageUpload';
 import FormFileUpload from 'components/Form/FormFileUpload';
+import Head from 'next/head';
 
 const NewProject: React.FC = () => {
   const { loggedIn, authenticate } = useSession();
@@ -27,6 +28,9 @@ const NewProject: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis - Create project</title>
+      </Head>
       <Loading active={loggedIn}>
         <Form path={'projects/create'} onSuccess={handleSuccess}>
           <FormImageUpload name={'thumbnail'} />

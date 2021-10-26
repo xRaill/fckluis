@@ -6,6 +6,7 @@ import Form from 'components/Form';
 import FormField from 'components/Form/FormField';
 import FormButton from 'components/Form/FormButton';
 import { useEffect } from 'react';
+import Head from 'next/head';
 
 const Register: React.FC = () => {
   const { loggedIn } = useSession();
@@ -26,6 +27,9 @@ const Register: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis - Register</title>
+      </Head>
       {!loggedIn && (
         <Form path={'register'} onSuccess={handleSuccess}>
           <FormField

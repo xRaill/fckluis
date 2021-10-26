@@ -7,6 +7,7 @@ import useRefState from 'hooks/useRefState';
 import useSession from 'hooks/useSession';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Head from 'next/head';
 
 const ProjectWrapper = styled.div`
   display: flex;
@@ -77,6 +78,16 @@ const Home: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis</title>
+        <meta
+          name={'description'}
+          content={
+            'FC Kluis is where you can see all project created by students on the Friesland College'
+          }
+        />
+        <meta name={'robots'} content={'index, follow'} />
+      </Head>
       <Search setSearch={setSearch} active={active} />
       <Loading active={visible}>
         <ProjectWrapper>

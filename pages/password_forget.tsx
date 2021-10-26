@@ -6,6 +6,7 @@ import Form from 'components/Form';
 import FormField from 'components/Form/FormField';
 import FormButton from 'components/Form/FormButton';
 import { useEffect } from 'react';
+import Head from 'next/head';
 
 const PasswordForget: React.FC = () => {
   const { loggedIn } = useSession();
@@ -23,6 +24,9 @@ const PasswordForget: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis - Password forget</title>
+      </Head>
       {!loggedIn && (
         <Form path={'users/password_forget'} onSuccess={handleSuccess}>
           <FormField name={'email'} placeholder={'email@example.com'} />

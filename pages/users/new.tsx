@@ -6,6 +6,7 @@ import Form from 'components/Form';
 import FormField from 'components/Form/FormField';
 import FormButton from 'components/Form/FormButton';
 import Loading from 'components/Loading';
+import Head from 'next/head';
 
 const NewUser: React.FC = () => {
   const { loggedIn, authenticate, admin } = useSession();
@@ -25,6 +26,9 @@ const NewUser: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Fc Kluis - Add user</title>
+      </Head>
       <Loading active={loggedIn}>
         <Form path={'users/new'} onSuccess={handleSuccess}>
           <FormField name={'email'} placeholder={'email@example.com'} />

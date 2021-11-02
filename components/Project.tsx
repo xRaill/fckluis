@@ -1,6 +1,13 @@
-import { faEdit, faQuestion, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEdit,
+  faQuestion,
+  faTimes,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useApi from 'hooks/useApi';
 import useSession from 'hooks/useSession';
+import useToast from 'hooks/useToast';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -41,10 +48,16 @@ const Position = styled.div<{ x: number; y: number; center: boolean }>`
 type transStates = 'entering' | 'entered' | 'exiting' | 'exited';
 
 const Project: React.FC<Partial<ProjectDetails>> = (props) => {
+  const { callback: delCallback, submit: delSubmit } = useApi(
+    `projects/${props.id}/destroy`,
+    'DELETE'
+  );
   const [transState, setTransState] = useState<transStates>('exited');
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [visible, setVisible] = useState(true);
   const { loggedIn } = useSession();
   const { push } = useRouter();
+  const toast = useToast();
 
   const content = useRef<HTMLDivElement>();
 
@@ -78,27 +91,45 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
     }, TIMEOUT);
   };
 
+  const remove = () => {
+    if (confirm('Are you sure you want to delete this project?')) delSubmit();
+  };
+
+  delCallback(async (data) => {
+    const body = await data.json();
+    if (body.success) {
+      toast({ type: 'success', message: 'Project removed!' });
+      close();
+      setTimeout(() => {
+        setVisible(false);
+      }, TIMEOUT);
+    }
+  });
+
   const active = ['entered', 'exiting'].includes(transState);
 
   return (
-    <div>
-      <OriginalContent ref={content} visible={active} onClick={activate}>
-        <Modal active={false} loggedIn={loggedIn} {...props} />
-      </OriginalContent>
-      {transState !== 'exited' && (
-        <Background active={transState === 'entered'} onClick={deactivate}>
-          <Position x={pos.x} y={pos.y} center={transState === 'entered'}>
-            <Modal
-              active={transState === 'entered'}
-              close={deactivate}
-              edit={edit}
-              loggedIn={loggedIn}
-              {...props}
-            />
-          </Position>
-        </Background>
-      )}
-    </div>
+    visible && (
+      <div>
+        <OriginalContent ref={content} visible={active} onClick={activate}>
+          <Modal active={false} loggedIn={loggedIn} {...props} />
+        </OriginalContent>
+        {transState !== 'exited' && (
+          <Background active={transState === 'entered'} onClick={deactivate}>
+            <Position x={pos.x} y={pos.y} center={transState === 'entered'}>
+              <Modal
+                active={transState === 'entered'}
+                close={deactivate}
+                edit={edit}
+                loggedIn={loggedIn}
+                remove={remove}
+                {...props}
+              />
+            </Position>
+          </Background>
+        )}
+      </div>
+    )
   );
 };
 
@@ -202,6 +233,7 @@ interface Modal extends Partial<ProjectDetails> {
   loggedIn: boolean;
   close?: VoidFunction;
   edit?: VoidFunction;
+  remove?: VoidFunction;
 }
 
 const Modal: React.FC<Modal> = ({
@@ -216,11 +248,15 @@ const Modal: React.FC<Modal> = ({
   loggedIn,
   close,
   edit,
+  remove,
 }) => (
   <ModalBody active={active} onClick={(e) => active && e.stopPropagation()}>
     <div className={'toolbar'}>
       <FontAwesomeIcon icon={faTimes} size={'2x'} onClick={close} />
       {loggedIn && <FontAwesomeIcon icon={faEdit} size={'2x'} onClick={edit} />}
+      {loggedIn && (
+        <FontAwesomeIcon icon={faTrashAlt} size={'2x'} onClick={remove} />
+      )}
     </div>
     <div className={'thumbnail'}>
       {thumbnail ? (

@@ -18,7 +18,7 @@ const PasswordForget: React.FC = () => {
   }, [loggedIn]);
 
   const handleSuccess = () => {
-    push('/');
+    push('/password_forget_email');
     toast({ type: 'success', message: 'Requested new password!' });
   };
 

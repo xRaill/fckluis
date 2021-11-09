@@ -9,7 +9,7 @@ import { Label } from 'db/models/Label';
 import { ProjectLabel } from 'db/models/ProjectLabel';
 import fileType from 'file-type';
 import { createHmac } from 'crypto';
-import { writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 
 export const config = {
   api: {
@@ -78,12 +78,14 @@ const CreateProject = ApiHandler(async (req, res) => {
 
   const fileName = file
     ? file_name
-      ? project.get('id') + '-' + file_name
+      ? project.id + '-' + file_name
       : createHmac('sha1', 'secret').update(fileBuffer).digest('hex') + '.zip'
     : '';
 
-  if (typeof file !== 'undefined') {
-    if (file) writeFileSync(`public/uploads/files/${fileName}`, fileBuffer);
+  if (file) {
+    mkdirSync('public/uploads/files', { recursive: true });
+    writeFileSync(`public/uploads/files/${fileName}`, fileBuffer);
+    await Project.update({ file: fileName }, { where: { id: project.id } });
   }
 
   // CREATING LABELS

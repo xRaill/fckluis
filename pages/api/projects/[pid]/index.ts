@@ -10,13 +10,12 @@ const Projects = ApiHandler(async (req, res) => {
 
   const loggedIn = validateAccessToken(accessToken);
 
-  if (!loggedIn) formError('base', 'Not authorized');
-
   const { pid } = <Record<string, string>>req.query;
 
   const project = await Project.findByPk(pid);
 
-  if (!project) formError('base', 'Project not found');
+  if (!project || (!project.get('public') && !loggedIn))
+    formError('base', 'Project not found');
 
   const labels = await (
     await project.$get('labels')

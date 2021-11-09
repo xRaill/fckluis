@@ -130,7 +130,7 @@ const Users: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Users</title>
+        <title>FC Kluis - Users</title>
       </Head>
       <Loading active={loggedIn && !!data.length}>
         <Container>

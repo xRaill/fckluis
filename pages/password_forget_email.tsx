@@ -16,7 +16,7 @@ const PasswordForgetEmail: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Password forget</title>
+        <title>FC Kluis - Password forget</title>
       </Head>
       <h3>Email send!</h3>
       <p>Check your email to change your password.</p>

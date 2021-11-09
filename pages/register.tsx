@@ -28,7 +28,7 @@ const Register: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Register</title>
+        <title>FC Kluis - Register</title>
       </Head>
       {!loggedIn && (
         <Form path={'register'} onSuccess={handleSuccess}>

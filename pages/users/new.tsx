@@ -27,7 +27,7 @@ const NewUser: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Add user</title>
+        <title>FC Kluis - Add user</title>
       </Head>
       <Loading active={loggedIn}>
         <Form path={'users/new'} onSuccess={handleSuccess}>

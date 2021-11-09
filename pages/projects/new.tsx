@@ -29,7 +29,7 @@ const NewProject: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Create project</title>
+        <title>FC Kluis - Create project</title>
       </Head>
       <Loading active={loggedIn}>
         <Form path={'projects/create'} onSuccess={handleSuccess}>

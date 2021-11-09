@@ -25,7 +25,7 @@ const PasswordForget: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Password forget</title>
+        <title>FC Kluis - Password forget</title>
       </Head>
       {!loggedIn && (
         <Form path={'users/password_forget'} onSuccess={handleSuccess}>

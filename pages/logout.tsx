@@ -38,7 +38,7 @@ const Logout: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Logout</title>
+        <title>FC Kluis - Logout</title>
       </Head>
     </Layout>
   );

@@ -9,9 +9,10 @@ import useApi from 'hooks/useApi';
 import useSession from 'hooks/useSession';
 import useToast from 'hooks/useToast';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Labels from './Labels';
+import Head from 'next/head';
 
 const OriginalContent = styled.div<{ visible: boolean }>`
   opacity: ${({ visible }) => (visible ? 0.1 : 1)};
@@ -35,13 +36,13 @@ const Position = styled.div<{ x: number; y: number; center: boolean }>`
   /* transition: all 0.5s cubic-bezier(0.47, 0.23, 0.34, 1.29); */
   transition: all 0.5s ease-in-out;
   position: absolute;
-  top: ${({ center, y }) => (center ? 0 : `${y}px`)};
-  left: ${({ center, x }) => (center ? 0 : `${x}px`)};
+  top: ${({ center, y }) => (center || !y ? 0 : `${y}px`)};
+  left: ${({ center, x }) => (center || !x ? 0 : `${x}px`)};
   @media (min-width: 767px) {
-    top: ${({ center, y }) => (center ? '50%' : `${y}px`)};
-    left: ${({ center, x }) => (center ? '50%' : `${x}px`)};
-    transform: ${({ center }) =>
-      center && 'translateX(-50%) translateY(-40vh)'};
+    top: ${({ center, y }) => (center || !y ? '50%' : `${y}px`)};
+    left: ${({ center, x }) => (center || !x ? '50%' : `${x}px`)};
+    transform: ${({ center, x, y }) =>
+      (center || !x || !y) && 'translateX(-50%) translateY(-40vh)'};
   }
 `;
 
@@ -56,7 +57,7 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [visible, setVisible] = useState(true);
   const { loggedIn } = useSession();
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
   const toast = useToast();
 
   const content = useRef<HTMLDivElement>();
@@ -64,21 +65,27 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
   const TIMEOUT = 500;
 
   const calulatePosition = () => {
+    if (props.standalone) return setPos({ x: null, y: -500 });
     const { x, y } = content.current.getBoundingClientRect();
     setPos({ x, y: y });
   };
 
   const activate = () => {
-    calulatePosition();
-    setTransState('entering');
-    setTimeout(() => {
-      setTransState('entered');
-    }, TIMEOUT / 2);
+    if (props.standalone) setTransState('entered');
+    else {
+      calulatePosition();
+      replace(`/projects/${props.id}`);
+      setTransState('entering');
+      setTimeout(() => {
+        setTransState('entered');
+      }, TIMEOUT / 2);
+    }
   };
 
   const deactivate = () => {
     calulatePosition();
     setTransState('exiting');
+    replace('/');
     setTimeout(() => {
       setTransState('exited');
     }, TIMEOUT);
@@ -108,14 +115,24 @@ const Project: React.FC<Partial<ProjectDetails>> = (props) => {
 
   const active = ['entered', 'exiting'].includes(transState);
 
+  useEffect(() => {
+    if (props.standalone) activate();
+  }, []);
+
   return (
     visible && (
       <div>
-        <OriginalContent ref={content} visible={active} onClick={activate}>
-          <Modal active={false} loggedIn={loggedIn} {...props} />
-        </OriginalContent>
+        {!props.standalone && (
+          <OriginalContent ref={content} visible={active} onClick={activate}>
+            <Modal active={false} loggedIn={loggedIn} {...props} />
+          </OriginalContent>
+        )}
         {transState !== 'exited' && (
           <Background active={transState === 'entered'} onClick={deactivate}>
+            <Head>
+              <title>FC Kluis - {props.title}</title>
+              <meta name="description" content={props.description} />
+            </Head>
             <Position x={pos.x} y={pos.y} center={transState === 'entered'}>
               <Modal
                 active={transState === 'entered'}
@@ -144,6 +161,7 @@ export interface ProjectDetails {
   url: string;
   file: string;
   thumbnail: string;
+  standalone?: boolean;
 }
 
 const ModalBody = styled.div<{ active: boolean }>`

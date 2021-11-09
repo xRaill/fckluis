@@ -68,11 +68,11 @@ const EditProject: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Edit project</title>
+        <title>FC Kluis - Edit project</title>
       </Head>
       <Loading active={!!Object.values(project).length}>
         <Head>
-          <title>Fc Kluis - Edit {project.title}</title>
+          <title>FC Kluis - Edit {project.title}</title>
         </Head>
         <Form path={`projects/${pid}/update`} onSuccess={handleSuccess}>
           <FormImageUpload

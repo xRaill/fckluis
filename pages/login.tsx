@@ -37,7 +37,7 @@ const Home: React.FC = () => {
   return (
     <Layout>
       <Head>
-        <title>Fc Kluis - Login</title>
+        <title>FC Kluis - Login</title>
       </Head>
       {!loggedIn && (
         <Form path={'login'} onSuccess={handleSuccess}>

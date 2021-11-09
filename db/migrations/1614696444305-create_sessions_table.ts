@@ -13,7 +13,7 @@ export const up: Migrations = async ({ context: sequelize }) => {
       allowNull: false,
     },
     active_for: {
-      type: DataType.INTEGER,
+      type: DataType.BIGINT,
       allowNull: false,
     },
     created_at: DataType.DATE,

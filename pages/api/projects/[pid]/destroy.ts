@@ -25,6 +25,13 @@ const DestroyProject = ApiHandler(async (req, res) => {
     unlinkSync(`public/uploads/thumbnails/${project.get('thumbnail')}.jpg`);
   }
 
+  // DESTROYING FILE
+
+  if (project.get('file')) {
+    mkdirSync('public/uploads/files', { recursive: true });
+    unlinkSync(`public/uploads/files/${project.get('file')}`);
+  }
+
   // DESTROYING LABELS
 
   const labels = await project.$get('labels');

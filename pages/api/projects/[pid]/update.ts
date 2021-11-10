@@ -8,7 +8,7 @@ import { Project } from 'db/models/Project';
 import { Label } from 'db/models/Label';
 import { ProjectLabel } from 'db/models/ProjectLabel';
 import fileType from 'file-type';
-import { mkdirSync, renameSync, unlinkSync, writeFileSync } from 'fs';
+import { mkdirSync, copyFileSync, unlinkSync, writeFileSync } from 'fs';
 import { createHmac } from 'crypto';
 import multiparty from 'multiparty';
 
@@ -104,7 +104,7 @@ const UpdateProject = ApiHandler(async (req, res) => {
 
     if (file) {
       fileName = `${project.get('id')}-${file.originalFilename}`;
-      renameSync(file.path, `public/uploads/files/${fileName}`);
+      copyFileSync(file.path, `public/uploads/files/${fileName}`);
     }
   } else {
     fileName = undefined;

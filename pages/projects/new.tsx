@@ -32,7 +32,7 @@ const NewProject: React.FC = () => {
         <title>FC Kluis - Create project</title>
       </Head>
       <Loading active={loggedIn}>
-        <Form path={'projects/create'} onSuccess={handleSuccess}>
+        <Form path={'projects/create'} onSuccess={handleSuccess} multipart>
           <FormImageUpload name={'thumbnail'} />
           <FormField name={'title'} />
           <FormArea name={'description'} />

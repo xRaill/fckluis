@@ -8,9 +8,10 @@ import FormError from './FormError';
 interface Form {
   path: string;
   onSuccess?: (res: Record<string, unknown>) => void;
+  multipart?: boolean;
 }
 
-const Form: React.FC<Form> = ({ path, onSuccess, children }) => {
+const Form: React.FC<Form> = ({ path, onSuccess, multipart, children }) => {
   const { active, data } = useAppSelector((state) => state.form);
   const { submit, callback } = useApi(path, 'POST');
   const dispatch = useAppDispatch();
@@ -45,7 +46,7 @@ const Form: React.FC<Form> = ({ path, onSuccess, children }) => {
     if (active) {
       const apiData = {};
       data.forEach((a) => (apiData[a.field] = a.value));
-      submit(apiData);
+      submit(apiData, multipart);
     }
   }, [active]);
 

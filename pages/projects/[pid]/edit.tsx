@@ -74,7 +74,11 @@ const EditProject: React.FC = () => {
         <Head>
           <title>FC Kluis - Edit {project.title}</title>
         </Head>
-        <Form path={`projects/${pid}/update`} onSuccess={handleSuccess}>
+        <Form
+          path={`projects/${pid}/update`}
+          onSuccess={handleSuccess}
+          multipart
+        >
           <FormImageUpload
             name={'thumbnail'}
             src={

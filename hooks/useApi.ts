@@ -9,7 +9,7 @@ type Api = (
 ) => {
   active: boolean;
   callback: (fn: callback, mem?: unknown[]) => void;
-  submit: (data?: Record<string, unknown>, headers?: HeadersInit) => void;
+  submit: (data?: Record<string, unknown>, bodyparser?: boolean) => void;
 };
 
 const useApi: Api = (path, method) => {
@@ -22,12 +22,12 @@ const useApi: Api = (path, method) => {
     return '?' + new URLSearchParams(data).toString();
   };
 
-  const submit: ReturnType<Api>['submit'] = (data, headers = {}) => {
+  const submit: ReturnType<Api>['submit'] = (data, multipart) => {
     setActive(true);
     setTimeout(async () => {
       const formData = new FormData();
 
-      if (data) {
+      if (data && multipart) {
         const keys = Object.keys(data);
         await Promise.all(
           keys.map(async (k) => {
@@ -42,10 +42,13 @@ const useApi: Api = (path, method) => {
 
       fetch(`/api/${path}${createUrlParams(data)}`, {
         method: method || 'POST',
-        headers: accessToken
-          ? { 'x-access-token': accessToken, ...headers }
-          : headers,
-        body: method !== 'GET' ? formData : undefined,
+        headers: accessToken ? { 'x-access-token': accessToken } : {},
+        body:
+          method !== 'GET'
+            ? multipart
+              ? formData
+              : JSON.stringify(data)
+            : undefined,
       })
         .finally(() => setActive(false))
         .then(callback);

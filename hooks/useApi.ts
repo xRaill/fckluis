@@ -9,7 +9,7 @@ type Api = (
 ) => {
   active: boolean;
   callback: (fn: callback, mem?: unknown[]) => void;
-  submit: (data?: Record<string, unknown>) => void;
+  submit: (data?: Record<string, string>, headers?: HeadersInit) => void;
 };
 
 const useApi: Api = (path, method) => {
@@ -22,13 +22,30 @@ const useApi: Api = (path, method) => {
     return '?' + new URLSearchParams(data).toString();
   };
 
-  const submit = (data) => {
+  const submit: ReturnType<Api>['submit'] = (data, headers = {}) => {
     setActive(true);
-    setTimeout(() => {
+    setTimeout(async () => {
+      const formData = new FormData();
+
+      if (data) {
+        const keys = Object.keys(data);
+        await Promise.all(
+          keys.map(async (k) => {
+            let v: string | Blob = data[k];
+            if (['file'].includes(k) && v.includes('http'))
+              v = await (await fetch(v as string)).blob();
+            formData.append(k, v);
+            Promise.resolve();
+          })
+        );
+      }
+
       fetch(`/api/${path}${createUrlParams(data)}`, {
         method: method || 'POST',
-        headers: accessToken ? { 'x-access-token': accessToken } : {},
-        body: method !== 'GET' ? JSON.stringify(data) : undefined,
+        headers: accessToken
+          ? { 'x-access-token': accessToken, ...headers }
+          : headers,
+        body: method !== 'GET' ? formData : undefined,
       })
         .finally(() => setActive(false))
         .then(callback);

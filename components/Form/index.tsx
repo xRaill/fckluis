@@ -1,4 +1,5 @@
 import useApi from 'hooks/useApi';
+import useToast from 'hooks/useToast';
 import { useEffect } from 'react';
 import { addError, reset, stop } from 'reducers/formSlice';
 import { useAppDispatch, useAppSelector } from 'utils/store';
@@ -13,6 +14,7 @@ const Form: React.FC<Form> = ({ path, onSuccess, children }) => {
   const { active, data } = useAppSelector((state) => state.form);
   const { submit, callback } = useApi(path, 'POST');
   const dispatch = useAppDispatch();
+  const toast = useToast();
 
   useEffect(() => {
     return () => {
@@ -21,7 +23,13 @@ const Form: React.FC<Form> = ({ path, onSuccess, children }) => {
   }, []);
 
   callback(async (res) => {
-    const body = await res.json();
+    let body;
+    try {
+      body = await res.json();
+    } catch {
+      toast({ type: 'danger', message: 'Something went wrong!' });
+      return dispatch(stop());
+    }
 
     if (body.success) {
       onSuccess && onSuccess(body);

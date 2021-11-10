@@ -37,7 +37,7 @@ const FormField: React.FC<FormInput> = ({
   }, [value]);
 
   useEffect(() => {
-    dispatch(updateData({ field: name, value: defaultValue }));
+    dispatch(updateData({ field: name, value: defaultValue || '' }));
   }, []);
 
   return (

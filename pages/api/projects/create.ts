@@ -9,13 +9,12 @@ import { Label } from 'db/models/Label';
 import { ProjectLabel } from 'db/models/ProjectLabel';
 import fileType from 'file-type';
 import { createHmac } from 'crypto';
-import { mkdirSync, writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync, renameSync } from 'fs';
+import multiparty from 'multiparty';
 
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: '340MB',
-    },
+    bodyParser: false,
   },
 };
 
@@ -28,20 +27,36 @@ const CreateProject = ApiHandler(async (req, res) => {
   const loggedIn = validateAccessToken(accessToken);
   if (!loggedIn) formError('base', 'Not authorized');
 
+  // PARSE FORM
+  const form = new multiparty.Form();
+  const result = await new Promise((resolve) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) formError('base', 'Could not create project!');
+      resolve({ ...files, ...fields });
+    });
+  });
+
+  Object.keys(result).forEach((key) => {
+    if (key === 'labels') {
+      if (!result[key][0]) result[key] = [];
+      else result[key] = result[key][0].split(',');
+      return;
+    }
+    result[key] = result[key][0];
+  });
+
   const {
     thumbnail,
     file,
-    file_name,
     title,
     description,
     author,
     url,
     public: aPublic,
     labels,
-  } = JSON.parse(req.body);
+  } = result as Record<string, any>;
 
   const thumbnailBuffer = thumbnail && Buffer.from(thumbnail, 'base64');
-  const fileBuffer = file && Buffer.from(file, 'base64');
 
   const errors = new formErrorCollection();
   if (!title) errors.add('title', 'Title required');
@@ -74,17 +89,15 @@ const CreateProject = ApiHandler(async (req, res) => {
     thumbnail: thumbnailHash,
   });
 
-  // UPDATRING FILE
-
-  const fileName = file
-    ? file_name
-      ? project.id + '-' + file_name
-      : createHmac('sha1', 'secret').update(fileBuffer).digest('hex') + '.zip'
-    : '';
+  // CREATING FILE
 
   if (file) {
     mkdirSync('public/uploads/files', { recursive: true });
-    writeFileSync(`public/uploads/files/${fileName}`, fileBuffer);
+
+    const fileName = `${project.id}-${file.originalFilename}`;
+
+    renameSync(file.path, `public/uploads/files/${fileName}`);
+
     await Project.update({ file: fileName }, { where: { id: project.id } });
   }
 

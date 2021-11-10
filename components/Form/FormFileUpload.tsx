@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import FormItem from './FormItem';
 import FormButton from './FormButton';
@@ -34,52 +34,23 @@ interface FormFileUpload {
 const FormFileUpload: React.FC<FormFileUpload> = ({ name, accept, value }) => {
   const [fileName, setFileName] = useState<string>(value);
   const fileInputRef = useRef<HTMLInputElement>();
-  const [processing, setProcessing] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleFileChange = async (file: File = null) => {
     if (file?.type && accept?.split(',').includes(file?.type)) {
-      if (file.size > 250000000) {
-        handleFileChange();
-        alert('File is too big! (max 238MB)');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.addEventListener('load', (event) => {
-        setProcessing(false);
-        dispatch(
-          updateData({
-            field: name,
-            value: event.target.result,
-          })
-        );
-      });
       dispatch(
-        updateData({
-          field: name + '_name',
-          value: file.name,
-        })
+        updateData({ field: name, value: window.URL.createObjectURL(file) })
       );
-      setProcessing(true);
       setFileName(file.name);
-      reader.readAsDataURL(file);
     } else {
       setFileName(undefined);
-      dispatch(
-        updateData({
-          field: name,
-          value: '',
-        })
-      );
-      dispatch(
-        updateData({
-          field: name + '_name',
-          value: '',
-        })
-      );
+      dispatch(updateData({ field: name, value: '' }));
     }
   };
+
+  useEffect(() => {
+    if (value) dispatch(updateData({ field: name, value }));
+  }, []);
 
   return (
     <FormItem name={name}>
@@ -92,14 +63,11 @@ const FormFileUpload: React.FC<FormFileUpload> = ({ name, accept, value }) => {
         style={{ display: 'none' }}
       />
       <FileInput htmlFor={'file-input'} active={!!fileName}>
-        <FormButton
-          loading={processing}
-          onClick={() => fileInputRef.current.click()}
-        >
+        <FormButton onClick={() => fileInputRef.current.click()}>
           {fileName ? 'Change' : 'Add'}
         </FormButton>
         <span>{fileName || 'No file selected'}</span>
-        {fileName && !processing && (
+        {fileName && (
           <FormButton color={'red'} onClick={() => handleFileChange()}>
             Remove
           </FormButton>

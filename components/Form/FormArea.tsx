@@ -26,7 +26,7 @@ const FormArea: React.FC<FormArea> = ({ name, defaultValue, placeholder }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(updateData({ field: name, value: defaultValue }));
+    dispatch(updateData({ field: name, value: defaultValue || '' }));
   }, []);
 
   return (

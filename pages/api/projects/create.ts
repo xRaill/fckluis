@@ -61,8 +61,6 @@ const CreateProject = ApiHandler(async (req, res) => {
 
   const errors = new formErrorCollection();
   if (!title) errors.add('title', 'Title required');
-  if (!description) errors.add('description', 'Description required');
-  if (!author) errors.add('author', 'Author required');
   if (thumbnail && (await fileType.fromBuffer(thumbnailBuffer))?.ext !== 'jpg')
     errors.add('thumbnail', 'Invalid filetype');
   errors.resolve();

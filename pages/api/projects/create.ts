@@ -48,6 +48,7 @@ const CreateProject = ApiHandler(async (req, res) => {
   const {
     thumbnail,
     file,
+    fileName: originalFilename,
     title,
     description,
     author,
@@ -94,7 +95,7 @@ const CreateProject = ApiHandler(async (req, res) => {
   if (file) {
     mkdirSync('public/uploads/files', { recursive: true });
 
-    const fileName = `${project.id}-${file.originalFilename}`;
+    const fileName = `${project.id}-${originalFilename}`;
 
     copyFileSync(file.path, `public/uploads/files/${fileName}`);
 

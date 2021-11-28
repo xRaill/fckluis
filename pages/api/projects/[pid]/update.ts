@@ -49,6 +49,7 @@ const UpdateProject = ApiHandler(async (req, res) => {
   const {
     thumbnail,
     file,
+    fileName: originalFilename,
     title,
     description,
     author,
@@ -103,7 +104,7 @@ const UpdateProject = ApiHandler(async (req, res) => {
       unlinkSync(`public/uploads/files/${project.get('file')}`);
 
     if (file) {
-      fileName = `${project.get('id')}-${file.originalFilename}`;
+      fileName = `${project.get('id')}-${originalFilename}`;
       copyFileSync(file.path, `public/uploads/files/${fileName}`);
     }
   } else {

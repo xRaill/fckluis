@@ -41,10 +41,12 @@ const FormFileUpload: React.FC<FormFileUpload> = ({ name, accept, value }) => {
       dispatch(
         updateData({ field: name, value: window.URL.createObjectURL(file) })
       );
+      dispatch(updateData({ field: name + 'Name', value: file.name }));
       setFileName(file.name);
     } else {
       setFileName(undefined);
       dispatch(updateData({ field: name, value: '' }));
+      dispatch(updateData({ field: name + 'Name', value: '' }));
     }
   };
 
